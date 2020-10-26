@@ -53,6 +53,17 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Courses.Where(x => x.IsFavorite == true).ToList();
         }
 
-        
+        //получить все избранные курсы
+        public IEnumerable<Course> AllCourseIsFavorite()
+        {
+            return _appDbContext.Courses.Where(x => x.IsFavorite == true).ToList();
+        }
+
+        // получить все модули курса
+        public IEnumerable<Module> AllThemsPost(int idCourse)
+        {
+            return _appDbContext.Modules.Where(x => x.CourseId == idCourse).ToList();
+        }
+
     }
 }

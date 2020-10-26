@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ICourses.Data.Models.Subject>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Категории</h1>
+
+<div class="container">
+    <!-- Example row of columns -->
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4">
+                <h2>@Html.DisplayFor(modelItem => item.Name)</h2>
+                <p>@Html.DisplayFor(modelItem => item.Description)</p>
+                <p>
+                    <a class="btn btn-secondary" asp-area="" asp-controller="Courses" asp-action="Index" asp-route-id="@item.Id" role="button">
+                        Просмотреть курсы
+                    </a>
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<!--
+
+     <a asp-action="Edit" asp-route-id="">Edit</a> |
+     <a asp-area="" asp-controller="Courses" asp-action="Index" asp-route-id="">Details</a> |
+     <a asp-action="Delete" asp-route-id="item.Id">Delete</a>|
+                      -->

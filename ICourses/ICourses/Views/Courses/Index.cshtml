@@ -1,0 +1,118 @@
+﻿@model IEnumerable<ICourses.Data.Models.Course>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="album">
+    <div class="jumbotron">
+
+        <!--передача представлений-->
+        <p>@ViewBag.Message</p>
+
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6">
+                    <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <!--предмет-->
+                            <!--<strong class="d-inline-block mb-2 text-primary">j </strong>
+                            -->
+                            <h3 class="mb-0">@Html.DisplayFor(modelItem => item.Name)</h3>
+                            <div class="mb-1 text-muted">@Html.DisplayFor(modelItem => item.Modified)</div>
+                            <div class="mb-1 text-muted">Язык:  @Html.DisplayFor(modelItem => item.Language)</div>
+
+                            <div style="height: 80px">
+                                <p class="card-text mb-auto">@Html.DisplayFor(modelItem => item.Description)</p>
+                            </div>
+
+                            <!--переход на курс-->
+                            <p>
+                                <a class="btn btn-secondary" asp-area="" asp-controller="Modules" asp-action="Index" asp-route-id="@item.Id" role="button">Начать изучение &raquo;</a>
+                            </p>
+
+                            <!--редактирование и удаление-->
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+
+                                    <a class="btn btn-sm btn-outline-secondary" role="button" asp-action="Edit" asp-route-id="@item.Id">
+                                        Редактировать
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Delete" asp-route-id="@item.Id">
+                                        Удалить
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Modified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Language)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsFavorite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Modified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsFavorite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-area="" asp-controller="Modules" asp-action="Index" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

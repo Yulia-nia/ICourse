@@ -51,6 +51,18 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
+        //public int GetCourseId(string name)
+        //{
+        //    _appDbContext.Modules.Where(_ => Equals(_.Course.Name, name));
+        //    return id;
+        //}
+
+        public int GetCourseId(string name)
+        {
+            return _appDbContext.Modules.FirstOrDefault(_ => Equals(_.Course.Name, name)).Id;
+        }
+
+
         public IEnumerable<TextMaterial> GetTextMaterials(Module module)
         {
             var text = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.TextMaterials).ToList();

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ICourses.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,18 +54,11 @@ namespace ICourses.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    AvatarId = table.Column<int>(nullable: true)
+                    Year = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Images_AvatarId",
-                        column: x => x.AvatarId,
-                        principalTable: "Images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,8 +72,7 @@ namespace ICourses.Migrations
                     Modified = table.Column<DateTime>(nullable: false),
                     Language = table.Column<string>(nullable: true),
                     IsFavorite = table.Column<bool>(nullable: false),
-                    SubjectID = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    SubjectID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,12 +83,6 @@ namespace ICourses.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Courses_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -270,11 +256,6 @@ namespace ICourses.Migrations
                 column: "SubjectID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_UserId",
-                table: "Courses",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Likes_CourseId",
                 table: "Likes",
                 column: "CourseId");
@@ -300,11 +281,6 @@ namespace ICourses.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_AvatarId",
-                table: "Users",
-                column: "AvatarId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Videos_Moduleid",
                 table: "Videos",
                 column: "Moduleid");
@@ -314,6 +290,9 @@ namespace ICourses.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Likes");
@@ -328,6 +307,9 @@ namespace ICourses.Migrations
                 name: "Videos");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Modules");
 
             migrationBuilder.DropTable(
@@ -335,12 +317,6 @@ namespace ICourses.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Images");
         }
     }
 }

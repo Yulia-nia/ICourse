@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using ICourses.Data;
 using ICourses.Data.Interfaces;
 using ICourses.Data.Interfases;
+using ICourses.Data.Models;
 using ICourses.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,10 +30,13 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddMvc();
-
 
             services.AddTransient<IUser, UserRepository>();
             services.AddTransient<ISubject, SubjectRepository>();
@@ -45,7 +50,7 @@ namespace ICourses
             services.AddTransient<ITextMaterial, TextRepository>();
             services.AddTransient<IVideo, VideoRepository>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +70,7 @@ namespace ICourses
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();    
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

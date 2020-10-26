@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICourses.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201017114804_Initial")]
-    partial class Initial
+    [Migration("20201023211640_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,14 +85,9 @@ namespace ICourses.Migrations
                     b.Property<int>("SubjectID")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SubjectID");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Courses");
                 });
@@ -242,13 +237,7 @@ namespace ICourses.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AvatarId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -287,9 +276,10 @@ namespace ICourses.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AvatarId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -330,7 +320,7 @@ namespace ICourses.Migrations
                         .HasForeignKey("ModuleId");
 
                     b.HasOne("ICourses.Data.Models.User", "User")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("UserId1");
                 });
 
@@ -341,10 +331,6 @@ namespace ICourses.Migrations
                         .HasForeignKey("SubjectID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ICourses.Data.Models.User", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Like", b =>
@@ -356,7 +342,7 @@ namespace ICourses.Migrations
                         .IsRequired();
 
                     b.HasOne("ICourses.Data.Models.User", "User")
-                        .WithMany("Likes")
+                        .WithMany()
                         .HasForeignKey("UserId1");
                 });
 
@@ -385,13 +371,6 @@ namespace ICourses.Migrations
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ICourses.Data.Models.User", b =>
-                {
-                    b.HasOne("ICourses.Data.Models.Image", "Avatar")
-                        .WithMany()
-                        .HasForeignKey("AvatarId");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Video", b =>
