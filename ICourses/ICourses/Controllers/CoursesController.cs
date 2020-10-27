@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using ICourses.ViewModel;
+using ICourses.Data.Interfaces;
 
 namespace ICourses.Controllers
 {
@@ -14,8 +16,14 @@ namespace ICourses.Controllers
     {
         private readonly AppDbContext _context;
 
-        public CoursesController(AppDbContext context)
+        // private readonly IUser _user;
+        private readonly ICourse _course;
+        private readonly ISubject _subject;
+
+        public CoursesController(AppDbContext context, ICourse course, ISubject subject)
         {
+            _course = course;
+            _subject = subject;
             _context = context;
         }
 
@@ -28,14 +36,9 @@ namespace ICourses.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var appDbContext = _context.Courses.Where(c => c.SubjectID == id);
-            ViewBag.Message = _context.Subjects.FirstOrDefault(c => c.Id == id).Description;
+            ViewBag.Description = _context.Subjects.FirstOrDefault(c => c.Id == id).Description;
+            ViewBag.NameCourse = _context.Subjects.FirstOrDefault(c => c.Id == id).Name;
             return View(await appDbContext.ToListAsync());
-        }
-
-
-        public string SubDiscr(int subid)
-        {
-            return _context.Courses.FirstOrDefault(c => c.Id == subid).Description;
         }
 
         // GET: Courses/Details/5

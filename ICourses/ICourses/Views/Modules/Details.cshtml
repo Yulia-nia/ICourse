@@ -30,17 +30,31 @@
     </dl>
 </div>
 
+@foreach (var item in Model.TextMaterials)
+{
 
-     
-    <p>
-        <a asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">Create New Text Material</a>
-    </p>
-    <p>
-        <a asp-area="" asp-controller="TextMaterials" asp-action="Index" asp-route-id="@Model.Id">View Tex tMaterial</a>
-    </p>
+    <h3 class="pb-4 mb-4 font-italic border-bottom">
+        @item.Name
+    </h3>
+
+    <p>@item.Modified</p>
+
+        <p>@item.Context</p>
 
 
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+        }
+
+
+        <p>
+            <a asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">Create New Text Material</a>
+        </p>
+
+        <p>
+            <a asp-area="" asp-controller="TextMaterials" asp-action="Index" asp-route-id="@Model.Id">View Tex tMaterial</a>
+        </p>
+
+
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>

@@ -23,6 +23,7 @@ namespace ICourses.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var appDbContext = _context.Modules.Where(_ => _.CourseId == id);
+            
             return View(await appDbContext.ToListAsync());
         }
 
@@ -37,6 +38,8 @@ namespace ICourses.Controllers
             var @module = await _context.Modules
                 .Include(_ => _.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            ViewBag.Texts = _context.TextMaterials.Where(_ => _.ModuleId == id).ToList();
 
             if (@module == null)
             {

@@ -15,5 +15,6 @@ namespace ICourses.Data.Models
         public string Context { get; set; }
         public Module Module { get; set; }
         public int ModuleId { get; set; }
+        public DateTime Modified { get; set; } = DateTime.Now;
     }
 }
