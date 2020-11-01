@@ -9,6 +9,10 @@ using ICourses.Data;
 using ICourses.Data.Models;
 using ICourses.ViewModel;
 using ICourses.Data.Interfaces;
+using System.IO;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace ICourses.Controllers
 {
@@ -63,7 +67,7 @@ namespace ICourses.Controllers
         // GET: Courses/Create
         public IActionResult Create()
         {
-            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id");
+            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Name");
             return View();
         }
 
@@ -74,6 +78,15 @@ namespace ICourses.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID")] Course course)
         {
+
+            //byte[] imageData = null;
+            //// считываем переданный файл в массив байтов
+            //using (var binaryReader = new BinaryReader(course.Image.Path.OpenReadStream()))
+            //{
+            //    imageData = binaryReader.ReadBytes((int)course.Image.Path.Length);
+            //}
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(course);
@@ -171,5 +184,37 @@ namespace ICourses.Controllers
         {
             return _context.Courses.Any(e => e.Id == id);
         }
+
+
+
+        public async Task<ActionResult> AttachImage(int id)
+        {
+            Course p = _course.GetCourse(id);
+            if (p == null)
+                return NotFound();
+            return View(p);
+        }
+
+        /*
+        [HttpPost]
+        public async Task<ActionResult> AttachImage(string id, IFormFile uploadedFile)
+        {
+            if (uploadedFile != null)
+            {
+                _course.StoreImage(id, uploadedFile.OpenReadStream(), uploadedFile.FileName);
+            }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> GetImage(int id)
+        {
+            var image = _course.GetCourse(id);
+            if (image == null)
+            {
+                return NotFound();
+            }
+            return File(image, "image/png");
+        }
+        */
     }
 }

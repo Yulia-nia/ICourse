@@ -30,19 +30,16 @@
     </dl>
 </div>
 
+<div class="context">
 @foreach (var item in Model.TextMaterials)
 {
-
-    <h3 class="pb-4 mb-4 font-italic border-bottom">
-        @item.Name
-    </h3>
-
-    <p>@item.Modified</p>
-
-        <p>@item.Context</p>
-
-
-        }
+<div class="blog-post">
+    <h2 class="blog-post-title">@item.Name</h2>
+    <p class="blog-post-meta mb-1 text-muted">@item.Modified</p>
+    <p>@item.Context</p>
+</div>
+}
+    </div>
 
 
         <p>

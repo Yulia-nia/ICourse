@@ -22,10 +22,11 @@
                 <div class="row no-gutters border rounded bg-white  flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                     <div class="col p-4 d-flex flex-column position-static">
                         <h3 class="mb-0">@Html.DisplayFor(modelItem => item.Name)</h3>
+                        
                         <div class="mb-1 text-muted">@Html.DisplayFor(modelItem => item.Modified)</div>
                         <div class="mb-1 text-muted">Язык:  @Html.DisplayFor(modelItem => item.Language)</div>
 
-                        <div style="height: 80px">
+                        <div style="height: 80px" class="container">
                             <p class="card-text mb-auto">@Html.DisplayFor(modelItem => item.Description)</p>
                         </div>
 

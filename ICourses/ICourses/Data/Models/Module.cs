@@ -13,15 +13,12 @@ namespace ICourses.Data.Models
         public DateTime Modified { get; set; } = DateTime.Now;
         public string Name { get; set; }
         public string Description { get; set; }
-
+        public Image Image { get; set; }
         public Course Course { get; set; }
         public int CourseId { get; set; }
-
         public virtual ICollection<TextMaterial> TextMaterials { get; set; }
         public virtual ICollection<Video> Videos { get; set; }
         public virtual ICollection<Podcast> Podcasts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-
-
     }
 }

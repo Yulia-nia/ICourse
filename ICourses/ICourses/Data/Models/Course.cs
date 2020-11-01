@@ -16,6 +16,8 @@ namespace ICourses.Data.Models
         
         // public bool? IsFree { get; set; }
         // public double? Cost { get; set; }
+
+        public Image Image { get; set; }
         public string Language { get; set; }
         
         //public User Author { get; set; }

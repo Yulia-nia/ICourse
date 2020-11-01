@@ -48,7 +48,7 @@ namespace ICourses.Controllers
         // GET: Podcasts/Create
         public IActionResult Create()
         {
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id");
+            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Name");
             return View();
         }
 

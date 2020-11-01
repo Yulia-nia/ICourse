@@ -48,7 +48,7 @@ namespace ICourses.Controllers
         // GET: Videos/Create
         public IActionResult Create()
         {
-            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id");
+            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Name");
             return View();
         }
 
