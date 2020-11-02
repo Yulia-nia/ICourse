@@ -35,10 +35,11 @@ namespace ICourses
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
+          
 
             services.AddMvc();
 
-            services.AddTransient<IUser, UserRepository>();
+            //services.AddTransient<IUser, UserRepository>();
             services.AddTransient<ISubject, SubjectRepository>();
             services.AddTransient<ICourse, CourseRepository>();
             services.AddTransient<IModule, ModuleRepository>();

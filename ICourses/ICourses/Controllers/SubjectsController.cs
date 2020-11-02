@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
@@ -20,12 +21,14 @@ namespace ICourses.Controllers
         }
 
         // GET: Subjects
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Subjects.ToListAsync());
         }
 
         // GET: Subjects/Details/5
+       
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

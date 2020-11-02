@@ -13,6 +13,7 @@ using System.IO;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
@@ -31,12 +32,8 @@ namespace ICourses.Controllers
             _context = context;
         }
 
-        public ActionResult GetSubDiscr()
-        {
-            return PartialView("_GetSubDiscr");
-        }
-
         // GET: Courses
+        [Authorize]
         public async Task<IActionResult> Index(int id)
         {
             var appDbContext = _context.Courses.Where(c => c.SubjectID == id);

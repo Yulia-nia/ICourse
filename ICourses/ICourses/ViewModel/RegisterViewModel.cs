@@ -8,7 +8,7 @@ namespace ICourses.ViewModel
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Не указан Email")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -16,7 +16,7 @@ namespace ICourses.ViewModel
         [Display(Name = "Год рождения")]
         public int Year { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Не указан пароль")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
