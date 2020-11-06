@@ -4,14 +4,16 @@ using ICourses.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICourses.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201103024007_User2")]
+    partial class User2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +67,10 @@ namespace ICourses.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorID")
+                    b.Property<Guid>("AuthorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
@@ -91,7 +96,7 @@ namespace ICourses.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("ImageId");
 
@@ -488,7 +493,7 @@ namespace ICourses.Migrations
                 {
                     b.HasOne("ICourses.Data.Models.User", "Author")
                         .WithMany("Courses")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("ICourses.Data.Models.Image", "Image")
                         .WithMany()

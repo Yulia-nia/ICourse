@@ -34,12 +34,14 @@ namespace ICourses
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
-          
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddControllersWithViews();
+
 
             services.AddMvc();
 
-            //services.AddTransient<IUser, UserRepository>();
             services.AddTransient<ISubject, SubjectRepository>();
             services.AddTransient<ICourse, CourseRepository>();
             services.AddTransient<IModule, ModuleRepository>();

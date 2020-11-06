@@ -47,6 +47,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Subjects/Create
+        [Authorize(Roles = "admin,moderator")]
         public IActionResult Create()
         {
             return View();
@@ -57,6 +58,7 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Subject subject)
         {
             if (ModelState.IsValid)
@@ -69,6 +71,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Subjects/Edit/5
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,6 +92,7 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Subject subject)
         {
             if (id != subject.Id)
@@ -120,6 +124,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Subjects/Delete/5
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,6 +145,7 @@ namespace ICourses.Controllers
         // POST: Subjects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subject = await _context.Subjects.FindAsync(id);

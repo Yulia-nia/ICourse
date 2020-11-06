@@ -20,8 +20,8 @@ namespace ICourses.Data.Models
         public Image Image { get; set; }
         public string Language { get; set; }
         
-        //public User Author { get; set; }
-        //public int AuthorID { get; set; }
+        public User Author { get; set; }
+        public string AuthorID { get; set; }
        
         public bool IsFavorite { get; set; }
         public Subject Subject { get; set; }

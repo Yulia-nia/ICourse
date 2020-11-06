@@ -8,7 +8,7 @@ namespace ICourses.Data.Interfases
 {
     public interface IUser
     {
-        //User GetUserDB(string id);
+        User GetUserDB(string id);
 
 
         /*void AddUserDB(User user);

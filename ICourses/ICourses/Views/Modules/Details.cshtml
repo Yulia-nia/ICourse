@@ -3,55 +3,174 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Module</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Modified)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Modified)
-        </dd>
+<div class="container m-1 my-3 p-3">
+    <div class="container-fluid">
+        <div class="row">
 
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <nav id="sidebarMenu" class="col-md-4 col-lg-4 d-md-block bg-light sidebar collapse">
+                <div class="sidebar-sticky alert-info">
+                    @if (@Model.TextMaterials != null)
+                    {
+                        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Текстовые материалы:</span>
+                        </h5>
 
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+                        @foreach (var item in Model.TextMaterials)
+                        {
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#@item.Id">
+                                        <span data-feather="home"></span>
+                                        @item.Name<span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                    }
 
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Name)
-        </dd>
-    </dl>
-</div>
+                    @if (@Model.Videos != null)
+                    {
+                        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Видео:</span>
 
-<div class="context">
-@foreach (var item in Model.TextMaterials)
-{
-<div class="blog-post">
-    <h2 class="blog-post-title">@item.Name</h2>
-    <p class="blog-post-meta mb-1 text-muted">@item.Modified</p>
-    <p>@item.Context</p>
-</div>
-}
-    </div>
+                        </h5>
+
+                        @foreach (var item in Model.Videos)
+                        {
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#@item.Id">
+                                        <span data-feather="home"></span>
+                                        @item.Name<span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                    }
+
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-7 ml-sm-auto col-lg-8 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div class="featurette">
+
+                        <section class="jumbotron-fluid text-center m-4">
+                            <div class="container">
+                                <h1>@Html.DisplayFor(model => model.Name)</h1>
+                                <span class="text-muted">@Html.DisplayFor(model => model.Modified)</span>
+                                <p class="lead text-muted">@Html.DisplayFor(model => model.Description)</p>
+                                @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
+                                {
+                                    <p>
+                                        <a class="btn my-2 btn-outline-info" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+                                        <a class="btn my-2 btn-outline-info" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
+                                    </p>
+                                }
+
+                            </div>
+                        </section>
 
 
-        <p>
-            <a asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">Create New Text Material</a>
-        </p>
+                        <div class="col-md-8">
+                            @if (@Model.TextMaterials != null)
+                            {
+                                @foreach (var item in Model.TextMaterials)
+                                {
+                                    <div class="blog-post">
+                                        <h2 class="blog-post-title"><a name="@item.Id">@item.Name</a></h2>
+                                        <p class="blog-post-meta mb-1 text-muted">@item.Modified</p>
+                                        <p>@item.Context</p>
 
-        <p>
-            <a asp-area="" asp-controller="TextMaterials" asp-action="Index" asp-route-id="@Model.Id">View Tex tMaterial</a>
-        </p>
+
+                                        @if (User.IsInRole("admin") || User.IsInRole("moderator") || (User.IsInRole("teacher")))
+                                        {
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-sm btn-outline-info" role="button" asp-controller="TextMaterials" asp-action="Edit" asp-route-id="@item.Id">
+                                                        Редактировать
+                                                    </a>
+                                                    <a class="btn btn-sm btn-outline-info" asp-controller="TextMaterials" asp-action="Delete" asp-route-id="@item.Id">
+                                                        Удалить
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        <hr />
+                                    </div>
+                                }
+                            }
+                        </div>
 
 
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="Index">Back to List</a>
+                        @if (User.IsInRole("admin") || (User.IsInRole("teacher")))
+                        {
+
+                            <p><a asp-area="" asp-controller="TextMaterials" asp-action="Create">Create New Text Material</a></p>
+                        }
+
+
+                        <div class="col-md-8">
+                            @if (@Model.Videos != null)
+                            {
+                                @foreach (var v in ViewBag.Videos)
+                                {
+                                    <div class="blog-post">
+                                        <h2 class="blog-post-title"><a name="@v.Id">@v.Name</a></h2>
+
+                                        <div height="240" width="320" controls>
+                                            <video width="320" height="240" controls>
+                                                <source src=@v.Url type="video/mp4" />
+                                            </video>
+                                        </div>
+
+                                        <video width="320" height="240" controls>
+                                            <source src=@v.Url type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+
+                                        @if (User.IsInRole("admin") || User.IsInRole("moderator") || (User.IsInRole("teacher")))
+                                        {
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-sm btn-outline-info" role="button" asp-controller="Videos" asp-action="Edit" asp-route-id="@v.Id">
+                                                        Редактировать
+                                                    </a>
+                                                    <a class="btn btn-sm btn-outline-info" asp-controller="Videos" asp-action="Delete" asp-route-id="@v.Id">
+                                                        Удалить
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        <hr />
+                                    </div>
+                                }
+                            }
+                        </div>
+
+
+                        @if (User.IsInRole("admin") || (User.IsInRole("teacher")))
+                        {
+
+                            <p>
+                                <a asp-area="" asp-controller="Videos" asp-action="Create">Create New Video</a>
+                            </p>
+                        }
+
+                        <div>
+                            @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                            }
+                            <a asp-action="Index">  Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
+    </div>
+</div>
+

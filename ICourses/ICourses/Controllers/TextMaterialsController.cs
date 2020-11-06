@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
+    [Authorize]
     public class TextMaterialsController : Controller
     {
         private readonly AppDbContext _context;
@@ -46,6 +48,7 @@ namespace ICourses.Controllers
         }
 
         // GET: TextMaterials/Create
+        [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Name");
@@ -57,19 +60,22 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,teacher")]
         public async Task<IActionResult> Create([Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
         {
+           
             if (ModelState.IsValid)
             {
                 _context.Add(textMaterial);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
             }
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
             return View(textMaterial);
         }
 
         // GET: TextMaterials/Edit/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +97,7 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
         {
             if (id != textMaterial.Id)
@@ -123,6 +130,7 @@ namespace ICourses.Controllers
         }
 
         // GET: TextMaterials/Delete/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,6 +152,7 @@ namespace ICourses.Controllers
         // POST: TextMaterials/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var textMaterial = await _context.TextMaterials.FindAsync(id);

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
+    [Authorize]
     public class ModulesController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,7 +25,6 @@ namespace ICourses.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var appDbContext = _context.Modules.Where(_ => _.CourseId == id);
-            
             return View(await appDbContext.ToListAsync());
         }
 
@@ -41,6 +42,8 @@ namespace ICourses.Controllers
 
             ViewBag.Texts = _context.TextMaterials.Where(_ => _.ModuleId == id).ToList();
 
+            ViewBag.Videos = _context.Videos.Where(_ => _.Moduleid == id).ToList();
+
             if (@module == null)
             {
                 return NotFound();
@@ -49,7 +52,9 @@ namespace ICourses.Controllers
             return View(@module);
         }
 
+
         // GET: Modules/Create
+        [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
@@ -59,8 +64,10 @@ namespace ICourses.Controllers
         // POST: Modules/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,teacher")]
         public async Task<IActionResult> Create([Bind("Id,Modified,Name,Description,CourseId")] Module @module)
         {
             if (ModelState.IsValid)
@@ -74,6 +81,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Modules/Edit/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,6 +103,7 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
         {
             if (id != @module.Id)
@@ -127,6 +136,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Modules/Delete/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,6 +158,7 @@ namespace ICourses.Controllers
         // POST: Modules/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @module = await _context.Modules.FindAsync(id);

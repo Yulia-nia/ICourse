@@ -10,13 +10,13 @@ using ICourses.Data.Models;
 using ICourses.ViewModel;
 using ICourses.Data.Interfaces;
 using System.IO;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
+    [Authorize]
     public class CoursesController : Controller
     {
         private readonly AppDbContext _context;
@@ -33,7 +33,6 @@ namespace ICourses.Controllers
         }
 
         // GET: Courses
-        [Authorize]
         public async Task<IActionResult> Index(int id)
         {
             var appDbContext = _context.Courses.Where(c => c.SubjectID == id);
@@ -62,9 +61,11 @@ namespace ICourses.Controllers
         }
 
         // GET: Courses/Create
+        [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Name");
+            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -73,28 +74,22 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID")] Course course)
+        [Authorize(Roles = "admin,teacher")]
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID,AuthorID")] Course course)
         {
-
-            //byte[] imageData = null;
-            //// считываем переданный файл в массив байтов
-            //using (var binaryReader = new BinaryReader(course.Image.Path.OpenReadStream()))
-            //{
-            //    imageData = binaryReader.ReadBytes((int)course.Image.Path.Length);
-            //}
-
-
             if (ModelState.IsValid)
             {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Courses", new { id = course.SubjectID });
             }
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
+            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
             return View(course);
         }
 
         // GET: Courses/Edit/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -116,7 +111,8 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID")] Course course)
+        [Authorize(Roles = "admin,moderator,teacher")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID,AuthorID")] Course course)
         {
             if (id != course.Id)
             {
@@ -144,10 +140,12 @@ namespace ICourses.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
+            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
             return View(course);
         }
 
         // GET: Courses/Delete/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,6 +167,7 @@ namespace ICourses.Controllers
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _context.Courses.FindAsync(id);
@@ -181,7 +180,6 @@ namespace ICourses.Controllers
         {
             return _context.Courses.Any(e => e.Id == id);
         }
-
 
 
         public async Task<ActionResult> AttachImage(int id)

@@ -1,6 +1,9 @@
-﻿using ICourses.Data.Models;
+﻿using ICourses.Data;
+using ICourses.Data.Interfases;
+using ICourses.Data.Models;
 using ICourses.Data.Repositories;
 using ICourses.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,16 +13,30 @@ using System.Threading.Tasks;
 
 namespace ICourses.Controllers
 {
+   
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
+
 
         public UsersController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
 
+        //[Authorize(Roles = "admin")]
+        //список пользователей
         public IActionResult Index() => View(_userManager.Users.ToList());
+
+        //public IActionResult Profile(string email)
+        //{
+        //    //var id = _context.Users.FirstOrDefault(_ => _.Email == email);
+
+        //    //return View(_context.Users.FirstOrDefault(_ => email.Equals(_.Email)));
+        //    //return RedirectToAction("Profile", "Users", new { User = _user.GetUserDB(_userManager.GetUserId(User)) });
+        //    User user = _userManager.Users.FirstOrDefault(_=> _.Email == email);
+        //    return View(user);
+        //}
 
         public IActionResult Create() => View();
 
@@ -45,9 +62,12 @@ namespace ICourses.Controllers
             return View(model);
         }
 
+
+        //редактировать пользователя
         public async Task<IActionResult> Edit(string id)
         {
-            User user = await _userManager.FindByIdAsync(id);
+            // получаем пользователя
+            User user = await _userManager.FindByIdAsync(id);            
             if (user == null)
             {
                 return NotFound();
@@ -71,7 +91,7 @@ namespace ICourses.Controllers
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -86,6 +106,7 @@ namespace ICourses.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -136,5 +157,6 @@ namespace ICourses.Controllers
             }
             return View(model);
         }
+
     }
 }

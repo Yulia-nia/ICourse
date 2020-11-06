@@ -19,6 +19,8 @@ namespace ICourses.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
+        
+        //список всех ролей
         public IActionResult Index() => View(_roleManager.Roles.ToList());
 
         public IActionResult Create() => View();

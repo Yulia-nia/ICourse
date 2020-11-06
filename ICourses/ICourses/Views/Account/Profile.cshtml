@@ -1,0 +1,42 @@
+﻿@model ICourses.Data.Models.User
+
+@{ ViewData["Title"] = "Profile"; }
+
+<h3 class="text-center">Profile</h3>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 img">
+        </div>
+        <div class="col-md-6 details">
+            <blockquote>
+                <
+
+                </h5>
+                <small><cite title="Source Title">@Model.Email <i class="icon-map-marker"></i></cite></small>
+            </blockquote>
+            <table>
+                <tr>
+                    <td>Год рождения:</td>
+
+                    <td>@Model.Year</td>
+                </tr>
+              
+              
+                <tr>
+                </tr>
+                <tr>
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                            <a class="btn btn-sm btn-primary"  asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">Редактировать профиль</a>
+                            <a class="btn btn-sm btn-primary"  asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">Сменить пароль</a>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ICourses.Controllers
 {
+    [Authorize]
     public class PodcastsController : Controller
     {
         private readonly AppDbContext _context;
@@ -46,6 +48,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Podcasts/Create
+        [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Name");
@@ -57,19 +60,21 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,teacher")]
         public async Task<IActionResult> Create([Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(podcast);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Modules", new { id = podcast.ModuleId });
             }
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", podcast.ModuleId);
             return View(podcast);
         }
 
         // GET: Podcasts/Edit/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +96,7 @@ namespace ICourses.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
         {
             if (id != podcast.Id)
@@ -123,6 +129,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Podcasts/Delete/5
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,6 +151,7 @@ namespace ICourses.Controllers
         // POST: Podcasts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var podcast = await _context.Podcasts.FindAsync(id);

@@ -1,11 +1,15 @@
 ﻿using ICourses.Data;
+using ICourses.Data.Interfases;
 using ICourses.Data.Models;
+using ICourses.Models;
 using ICourses.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +22,16 @@ namespace ICourses.Controllers
     public class AccountController : Controller
     {
 
-        private readonly UserManager<User> _userManager;
+        UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public IConfiguration _config;
+        //private readonly IUser _user;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config/*, IUser iUser*/)
         {
+            //_user = iUser;
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
 
         [HttpGet]
@@ -32,6 +39,19 @@ namespace ICourses.Controllers
         {
             return View();
         }
+       
+        public async Task<IActionResult> Profile()
+        {
+            
+            var id = _userManager.GetUserId(User);
+            //User user = await _userManager.FindByIdAsync();
+
+            User user = await _userManager.FindByIdAsync(id);
+            //User user = _user.GetUserDB(_userManager.GetUserId(User));
+
+            return View(user);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -99,6 +119,40 @@ namespace ICourses.Controllers
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+       
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
         }
 
     }

@@ -33,27 +33,20 @@
                 <input asp-for="Language" class="form-control" />
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            @*<div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsFavorite" /> @Html.DisplayNameFor(model => model.IsFavorite)
                 </label>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="SubjectID" class="control-label"></label>
                 <select asp-for="SubjectID" class="form-control" asp-items="ViewBag.SubjectID"></select>
             </div>
 
-            <!--<label id="imageButton" class="text-center">
-                <img src="~/Images/add.png" alt="Image" id="Image" class="rounded-top mb-1 mx-auto" style="
-                        object-fit: cover;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                        height: 100%;
-                        max-height: 400px;
-                        cursor:pointer;">
-                <input type="file" id="File" name="File" hidden="hidden" />
-            </label>-->
+            <div class="form-group">
+                <label asp-for="AuthorID" class="control-label"></label>
+                <select asp-for="AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

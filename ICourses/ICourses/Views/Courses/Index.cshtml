@@ -22,7 +22,7 @@
                 <div class="row no-gutters border rounded bg-white  flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                     <div class="col p-4 d-flex flex-column position-static">
                         <h3 class="mb-0">@Html.DisplayFor(modelItem => item.Name)</h3>
-                        
+
                         <div class="mb-1 text-muted">@Html.DisplayFor(modelItem => item.Modified)</div>
                         <div class="mb-1 text-muted">Язык:  @Html.DisplayFor(modelItem => item.Language)</div>
 
@@ -35,24 +35,31 @@
                             <a class="btn btn-secondary" asp-area="" asp-controller="Modules" asp-action="Index" asp-route-id="@item.Id" role="button">Начать изучение &raquo;</a>
                         </p>
 
-                        <!--редактирование и удаление-->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-outline-secondary" role="button" asp-action="Edit" asp-route-id="@item.Id">
-                                    Редактировать
-                                </a>
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Delete" asp-route-id="@item.Id">
-                                    Удалить
-                                </a>
-                            </div>
-                        </div>
+                        @if (User.IsInRole("admin") || User.IsInRole("moderator") || (User.IsInRole("teacher")))
+                        {
+                           
+                                <!--редактирование и удаление-->
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline-secondary" role="button" asp-action="Edit" asp-route-id="@item.Id">
+                                            Редактировать
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Delete" asp-route-id="@item.Id">
+                                            Удалить
+                                        </a>
+                                    </div>
+                                </div>
+                            
+                        }
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-
-<p>
-    <a asp-action="Create">Добавить новый курс</a>
-</p>
+@if (User.IsInRole("admin") || User.IsInRole("teacher"))
+{
+    <p>
+        <a asp-action="Create">Добавить новый курс</a>
+    </p>
+}
