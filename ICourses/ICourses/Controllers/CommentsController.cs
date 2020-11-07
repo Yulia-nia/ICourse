@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 
-namespace ICourses.Controllers
+namespace ICourses.Views
 {
     public class CommentsController : Controller
     {
@@ -22,7 +22,7 @@ namespace ICourses.Controllers
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Comments.Include(c => c.Course);
+            var appDbContext = _context.Comments.Include(c => c.Course).Include(c => c.User);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace ICourses.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.Course)
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {
@@ -48,7 +49,8 @@ namespace ICourses.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -63,9 +65,10 @@ namespace ICourses.Controllers
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 
@@ -83,6 +86,7 @@ namespace ICourses.Controllers
                 return NotFound();
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 
@@ -119,6 +123,7 @@ namespace ICourses.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 
@@ -132,6 +137,7 @@ namespace ICourses.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.Course)
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (comment == null)
             {

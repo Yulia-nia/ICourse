@@ -38,6 +38,13 @@ namespace ICourses.Controllers
 
             var subject = await _context.Subjects
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            ViewBag.Courses = _context.Courses
+               .Include(c => c.Subject)
+               .Include(c => c.Author)
+               .Where(_ => _.SubjectID == id);
+
+
             if (subject == null)
             {
                 return NotFound();
@@ -45,6 +52,12 @@ namespace ICourses.Controllers
 
             return View(subject);
         }
+
+
+
+
+
+
 
         // GET: Subjects/Create
         [Authorize(Roles = "admin,moderator")]

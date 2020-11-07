@@ -13,6 +13,7 @@ namespace ICourses.Data.Models
         //public int Id { get; set; }
         public int Year { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
     }
 }

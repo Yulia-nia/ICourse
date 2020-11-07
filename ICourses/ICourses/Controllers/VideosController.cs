@@ -123,7 +123,7 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
             }
             ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
             return View(video);
@@ -158,7 +158,7 @@ namespace ICourses.Controllers
             var video = await _context.Videos.FindAsync(id);
             _context.Videos.Remove(video);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
         }
 
         private bool VideoExists(int id)

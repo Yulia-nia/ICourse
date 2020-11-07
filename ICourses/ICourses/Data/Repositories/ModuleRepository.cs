@@ -79,13 +79,13 @@ namespace ICourses.Data.Repositories
             return podcasts.AsReadOnly(); ;
         }
 
-        public IEnumerable<Comment> GetComments(Module module)
-        {
-            var comment = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.Comments).ToList();
-            return comment.AsReadOnly();
-        }
+        //public IEnumerable<Comment> GetComments(Module module)
+        //{
+        //    var comment = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.Comments).ToList();
+        //    return comment.AsReadOnly();
+        //}
 
-        
+
 
         /*public void AddComment(string userId, Comment comment)
         {

@@ -22,20 +22,22 @@ namespace ICourses.Controllers
         private readonly AppDbContext _context;
 
         // private readonly IUser _user;
-        private readonly ICourse _course;
-        private readonly ISubject _subject;
+ 
+        //private readonly ISubject _subject;
 
-        public CoursesController(AppDbContext context, ICourse course, ISubject subject)
+        public CoursesController(AppDbContext context/*, ISubject subject*/)
         {
-            _course = course;
-            _subject = subject;
+            
+            //_subject = subject;
             _context = context;
         }
 
         // GET: Courses
         public async Task<IActionResult> Index(int id)
         {
-            var appDbContext = _context.Courses.Where(c => c.SubjectID == id);
+            //подключить другие моделькиии
+            var appDbContext = _context.Courses.Where(c => c.SubjectID == id).Include(c => c.Author);
+
             ViewBag.Description = _context.Subjects.FirstOrDefault(c => c.Id == id).Description;
             ViewBag.NameCourse = _context.Subjects.FirstOrDefault(c => c.Id == id).Name;
             return View(await appDbContext.ToListAsync());
@@ -51,7 +53,14 @@ namespace ICourses.Controllers
 
             var course = await _context.Courses
                 .Include(c => c.Subject)
+                .Include(c => c.Author)
+                .Include(c => c.Modules)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
+
+            ViewBag.Comments = _context.Comments.Include(c => c.Course).Include(c => c.User).Where(_ => _.CourseId == id);
+
             if (course == null)
             {
                 return NotFound();
@@ -62,8 +71,12 @@ namespace ICourses.Controllers
 
         // GET: Courses/Create
         [Authorize(Roles = "admin,teacher")]
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
+            //ViewData["SubjectID"] = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id;
+
+
+
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Name");
             ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
@@ -79,10 +92,12 @@ namespace ICourses.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Courses", new { id = course.SubjectID });
+                return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
             }
+            //ViewData["SubjectID"] = _context.Subjects.FirstOrDefault(_ => _.Id == SubjectID).Id;
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
             ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
             return View(course);
@@ -137,7 +152,7 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
             }
             ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
             ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
@@ -173,7 +188,7 @@ namespace ICourses.Controllers
             var course = await _context.Courses.FindAsync(id);
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
         }
 
         private bool CourseExists(int id)
@@ -182,14 +197,7 @@ namespace ICourses.Controllers
         }
 
 
-        public async Task<ActionResult> AttachImage(int id)
-        {
-            Course p = _course.GetCourse(id);
-            if (p == null)
-                return NotFound();
-            return View(p);
-        }
-
+   
         /*
         [HttpPost]
         public async Task<ActionResult> AttachImage(string id, IFormFile uploadedFile)

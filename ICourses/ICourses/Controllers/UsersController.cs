@@ -28,16 +28,6 @@ namespace ICourses.Controllers
         //список пользователей
         public IActionResult Index() => View(_userManager.Users.ToList());
 
-        //public IActionResult Profile(string email)
-        //{
-        //    //var id = _context.Users.FirstOrDefault(_ => _.Email == email);
-
-        //    //return View(_context.Users.FirstOrDefault(_ => email.Equals(_.Email)));
-        //    //return RedirectToAction("Profile", "Users", new { User = _user.GetUserDB(_userManager.GetUserId(User)) });
-        //    User user = _userManager.Users.FirstOrDefault(_=> _.Email == email);
-        //    return View(user);
-        //}
-
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -61,7 +51,6 @@ namespace ICourses.Controllers
             }
             return View(model);
         }
-
 
         //редактировать пользователя
         public async Task<IActionResult> Edit(string id)

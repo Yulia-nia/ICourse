@@ -1,0 +1,61 @@
+﻿@model ICourses.Data.Models.Course
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("teacher"))
+{
+    <p>
+        <a asp-controller="Modules" asp-action="Create">Добавить новый модуль</a>
+    </p>
+}
+
+<div>@Model.Description</div>
+
+<table class="table">
+    <tbody>
+        @if (@Model.Modules != null)
+        {
+
+            @foreach (var item in @Model.Modules)
+            {
+                <tr>
+                    <td>
+                        @item.Modified
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+
+                    <td>
+                        <a asp-controller="Modules" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+=
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<h3>Комментарии</h3>
+
+<div class="container">
+
+    @if(ViewBag.Comments != null)
+    {
+        <p>Лист все коментов</p>
+        @foreach (var item in @ViewBag.Comments)
+        {
+            <h2>@item.Title</h2>
+            <p>@item.User.Email</p>
+            
+            <p>@item.Text</p>
+
+            }
+            }
+</div>
+
+        <a asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="">Добавить коментарий</a>

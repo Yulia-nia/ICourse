@@ -19,6 +19,6 @@ namespace ICourses.Data.Models
         public virtual ICollection<TextMaterial> TextMaterials { get; set; }
         public virtual ICollection<Video> Videos { get; set; }
         public virtual ICollection<Podcast> Podcasts { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
+       // public virtual ICollection<Comment> Comments { get; set; }
     }
 }
