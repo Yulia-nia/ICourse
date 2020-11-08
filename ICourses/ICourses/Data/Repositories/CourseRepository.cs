@@ -32,7 +32,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Courses.ToList();
         }
 
-        public Course GetCourse(int id)
+        public Course GetCourse(Guid id)
         {
             return _appDbContext.Courses.Where(x => x.Id == id).FirstOrDefault();
         }
@@ -60,7 +60,7 @@ namespace ICourses.Data.Repositories
         }
 
         // получить все модули курса
-        public IEnumerable<Module> AllThemsPost(int idCourse)
+        public IEnumerable<Module> AllThemsPost(Guid idCourse)
         {
             return _appDbContext.Modules.Where(x => x.CourseId == idCourse).ToList();
         }

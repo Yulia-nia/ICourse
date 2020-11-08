@@ -22,14 +22,14 @@ namespace ICourses.Controllers
         }
 
         // GET: TextMaterials
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(Guid id)
         {
             var appDbContext = _context.TextMaterials.Where(t => t.Module.Id == id);
             return View(await appDbContext.ToListAsync());
         }
 
         // GET: TextMaterials/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -51,7 +51,6 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Name");
             return View();
         }
 
@@ -61,22 +60,25 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
         {
            
             if (ModelState.IsValid)
             {
+                textMaterial.Id = Guid.NewGuid();
+                textMaterial.ModuleId = _context.Modules.FirstOrDefault(_ => _.Id == id).Id;
+
                 _context.Add(textMaterial);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
             }
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
+
             return View(textMaterial);
         }
 
         // GET: TextMaterials/Edit/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -98,7 +100,7 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
         {
             if (id != textMaterial.Id)
             {
@@ -123,7 +125,7 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
             }
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
             return View(textMaterial);
@@ -131,7 +133,7 @@ namespace ICourses.Controllers
 
         // GET: TextMaterials/Delete/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -153,15 +155,15 @@ namespace ICourses.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var textMaterial = await _context.TextMaterials.FindAsync(id);
             _context.TextMaterials.Remove(textMaterial);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
         }
 
-        private bool TextMaterialExists(int id)
+        private bool TextMaterialExists(Guid id)
         {
             return _context.TextMaterials.Any(e => e.Id == id);
         }

@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddImage(Image image);
         IEnumerable<Image> GetAllImages();
         void DeleteImage(Image image);
-        void DeleteImageById(int id);
-        Image GetImage(int id);
+        void DeleteImageById(Guid id);
+        Image GetImage(Guid id);
         void UpdateImage(Image image);
     }
 }

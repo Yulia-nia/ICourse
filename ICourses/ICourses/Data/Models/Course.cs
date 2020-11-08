@@ -9,7 +9,7 @@ namespace ICourses.Data.Models
     public class Course
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Modified { get; set; } = DateTime.Now;
@@ -21,11 +21,11 @@ namespace ICourses.Data.Models
         public string Language { get; set; }
         
         public User Author { get; set; }
-        public string AuthorID { get; set; }
+        public string AuthorId { get; set; }
        
         public bool IsFavorite { get; set; }
         public Subject Subject { get; set; }
-        public int SubjectID { get; set; }
+        public Guid SubjectId { get; set; }
         
         public virtual ICollection<Like> Likes { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

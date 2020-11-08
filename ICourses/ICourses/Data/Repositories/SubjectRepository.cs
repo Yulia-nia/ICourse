@@ -66,7 +66,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteSubjectById(int id)
+        public void DeleteSubjectById(Guid id)
         {
             var subject = _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Subjects.Remove(subject);
@@ -78,7 +78,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Subjects.ToList();
         }
 
-        public Subject GetSubject(int id)
+        public Subject GetSubject(Guid id)
         {
             return _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefault();
         }

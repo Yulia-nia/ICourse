@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddSubject(Subject subject);
         IEnumerable<Subject> GetAllSubject();
         void DeleteSubject(Subject subject);
-        void DeleteSubjectById(int id);
-        Subject GetSubject(int id);
+        void DeleteSubjectById(Guid id);
+        Subject GetSubject(Guid id);
         void UpdateSubject(Subject subject);
         IEnumerable<Course> GetCourses(Subject subject);
     }

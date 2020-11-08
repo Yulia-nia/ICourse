@@ -28,14 +28,14 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteModuleById(int id)
+        public void DeleteModuleById(Guid id)
         {
             var module = _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Modules.Remove(module);
             _appDbContext.SaveChanges();
         }
 
-        public Module GetModule(int id)
+        public Module GetModule(Guid id)
         {
             return _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefault();
         }
@@ -57,7 +57,7 @@ namespace ICourses.Data.Repositories
         //    return id;
         //}
 
-        public int GetCourseId(string name)
+        public Guid GetCourseId(string name)
         {
             return _appDbContext.Modules.FirstOrDefault(_ => Equals(_.Course.Name, name)).Id;
         }

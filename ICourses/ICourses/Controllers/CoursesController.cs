@@ -19,32 +19,26 @@ namespace ICourses.Controllers
     [Authorize]
     public class CoursesController : Controller
     {
+        UserManager<User> _userManager;
         private readonly AppDbContext _context;
 
-        // private readonly IUser _user;
- 
-        //private readonly ISubject _subject;
-
-        public CoursesController(AppDbContext context/*, ISubject subject*/)
+        public CoursesController(AppDbContext context, UserManager<User> userManager)
         {
-            
-            //_subject = subject;
+            _userManager = userManager;
             _context = context;
         }
 
-        // GET: Courses
-        public async Task<IActionResult> Index(int id)
+        //++
+        public async Task<IActionResult> Index(Guid id)
         {
-            //подключить другие моделькиии
-            var appDbContext = _context.Courses.Where(c => c.SubjectID == id).Include(c => c.Author);
-
+            var appDbContext = _context.Courses.Where(c => c.SubjectId == id).Include(c => c.Author);
             ViewBag.Description = _context.Subjects.FirstOrDefault(c => c.Id == id).Description;
             ViewBag.NameCourse = _context.Subjects.FirstOrDefault(c => c.Id == id).Name;
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        //++
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -57,8 +51,6 @@ namespace ICourses.Controllers
                 .Include(c => c.Modules)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-
-
             ViewBag.Comments = _context.Comments.Include(c => c.Course).Include(c => c.User).Where(_ => _.CourseId == id);
 
             if (course == null)
@@ -69,43 +61,39 @@ namespace ICourses.Controllers
             return View(course);
         }
 
-        // GET: Courses/Create
+
         [Authorize(Roles = "admin,teacher")]
-        public IActionResult Create(int? id)
+        public IActionResult Create(Guid? id)
         {
-            //ViewData["SubjectID"] = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id;
-
-
-
-            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Name");
-            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "UserName");
+            
             return View();
         }
 
-        // POST: Courses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID,AuthorID")] Course course)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectId,AuthorId")] Course course)
         {
+            string uid = _userManager.GetUserId(User);
+            User user = await _userManager.FindByIdAsync(uid);
+
             if (ModelState.IsValid)
             {
-                
+                course.Id = Guid.NewGuid();
+                course.Modified = DateTime.Now;
+                course.SubjectId = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id;
+                course.AuthorId = user.Id;
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
+                return RedirectToAction("Details", "Subjects", new { id = course.SubjectId });
             }
-            //ViewData["SubjectID"] = _context.Subjects.FirstOrDefault(_ => _.Id == SubjectID).Id;
-            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
-            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
+    
             return View(course);
         }
 
-        // GET: Courses/Edit/5
+
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -117,17 +105,14 @@ namespace ICourses.Controllers
             {
                 return NotFound();
             }
-            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
+            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectId);
             return View(course);
         }
 
-        // POST: Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID,AuthorID")] Course course)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectID,AuthorID")] Course course)
         {
             if (id != course.Id)
             {
@@ -152,16 +137,16 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
+                return RedirectToAction("Details", "Subjects", new { id = course.SubjectId });
             }
-            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectID);
-            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.AuthorID);
+            ViewData["SubjectID"] = new SelectList(_context.Subjects, "Id", "Id", course.SubjectId);
+            ViewData["AuthorID"] = new SelectList(_context.Users, "Id", "Id", course.SubjectId);
             return View(course);
         }
-
-        // GET: Courses/Delete/5
+        
+        
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -179,19 +164,17 @@ namespace ICourses.Controllers
             return View(course);
         }
 
-        // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             var course = await _context.Courses.FindAsync(id);
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "Subjects", new { id = course.SubjectID });
+            return RedirectToAction("Details", "Subjects", new { id = course.SubjectId });
         }
 
-        private bool CourseExists(int id)
+        private bool CourseExists(Guid id)
         {
             return _context.Courses.Any(e => e.Id == id);
         }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ICourses.Migrations
 {
-    public partial class User : Migration
+    public partial class New : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,8 +51,7 @@ namespace ICourses.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Path = table.Column<string>(nullable: false),
                     UploadDate = table.Column<DateTime>(nullable: false)
                 },
@@ -65,8 +64,7 @@ namespace ICourses.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -185,19 +183,26 @@ namespace ICourses.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Modified = table.Column<DateTime>(nullable: false),
-                    ImageId = table.Column<int>(nullable: true),
+                    ImageId = table.Column<Guid>(nullable: true),
                     Language = table.Column<string>(nullable: true),
+                    AuthorId1 = table.Column<string>(nullable: true),
+                    AuthorId = table.Column<Guid>(nullable: false),
                     IsFavorite = table.Column<bool>(nullable: false),
-                    SubjectID = table.Column<int>(nullable: false)
+                    SubjectId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_AspNetUsers_AuthorId1",
+                        column: x => x.AuthorId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Courses_Images_ImageId",
                         column: x => x.ImageId,
@@ -205,22 +210,50 @@ namespace ICourses.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Courses_Subjects_SubjectID",
-                        column: x => x.SubjectID,
+                        name: "FK_Courses_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true),
+                    UserId1 = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    CourseId = table.Column<Guid>(nullable: false),
+                    Modified = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Likes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     UserId1 = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    CourseId = table.Column<int>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false),
+                    CourseId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,13 +276,12 @@ namespace ICourses.Migrations
                 name: "Modules",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    ImageId = table.Column<int>(nullable: true),
-                    CourseId = table.Column<int>(nullable: false)
+                    ImageId = table.Column<Guid>(nullable: true),
+                    CourseId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -269,52 +301,14 @@ namespace ICourses.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    Text = table.Column<string>(nullable: true),
-                    UserId1 = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    CourseId = table.Column<int>(nullable: false),
-                    Modified = table.Column<DateTime>(nullable: false),
-                    ModuleId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comments_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Podcasts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Duration = table.Column<int>(nullable: false),
+                    Duration = table.Column<double>(nullable: false),
                     Content = table.Column<string>(nullable: true),
-                    ModuleId = table.Column<int>(nullable: false)
+                    ModuleId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,11 +325,10 @@ namespace ICourses.Migrations
                 name: "TextMaterials",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Context = table.Column<string>(nullable: true),
-                    ModuleId = table.Column<int>(nullable: false),
+                    ModuleId = table.Column<Guid>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -353,11 +346,10 @@ namespace ICourses.Migrations
                 name: "Videos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Url = table.Column<string>(nullable: true),
-                    Moduleid = table.Column<int>(nullable: false)
+                    Moduleid = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -415,14 +407,14 @@ namespace ICourses.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ModuleId",
-                table: "Comments",
-                column: "ModuleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId1",
                 table: "Comments",
                 column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_AuthorId1",
+                table: "Courses",
+                column: "AuthorId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_ImageId",
@@ -430,9 +422,9 @@ namespace ICourses.Migrations
                 column: "ImageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_SubjectID",
+                name: "IX_Courses_SubjectId",
                 table: "Courses",
-                column: "SubjectID");
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_CourseId",
@@ -506,13 +498,13 @@ namespace ICourses.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Images");

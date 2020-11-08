@@ -29,7 +29,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Podcasts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -50,8 +50,7 @@ namespace ICourses.Controllers
         // GET: Podcasts/Create
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
-        {
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Name");
+        {            
             return View();
         }
 
@@ -61,21 +60,24 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
         {
             if (ModelState.IsValid)
             {
+                podcast.Id = Guid.NewGuid();
+                podcast.ModuleId = _context.Modules.FirstOrDefault(_ => _.Id == id).Id;
+
                 _context.Add(podcast);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Modules", new { id = podcast.ModuleId });
             }
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", podcast.ModuleId);
+            
             return View(podcast);
         }
 
         // GET: Podcasts/Edit/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -97,7 +99,7 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Duration,Content,ModuleId")] Podcast podcast)
         {
             if (id != podcast.Id)
             {
@@ -122,7 +124,7 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Modules", new { id = podcast.ModuleId });
             }
             ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", podcast.ModuleId);
             return View(podcast);
@@ -130,7 +132,7 @@ namespace ICourses.Controllers
 
         // GET: Podcasts/Delete/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -152,15 +154,15 @@ namespace ICourses.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var podcast = await _context.Podcasts.FindAsync(id);
             _context.Podcasts.Remove(podcast);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Modules", new { id = podcast.ModuleId });
         }
 
-        private bool PodcastExists(int id)
+        private bool PodcastExists(Guid id)
         {
             return _context.Podcasts.Any(e => e.Id == id);
         }

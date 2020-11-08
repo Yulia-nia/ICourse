@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddPodcast(Podcast podcast);
         IEnumerable<Podcast> GetAllPodcasts();
         void DeletePodcast(Podcast podcast);
-        void DeletePodcastById(int id);
-        Podcast GetPodcast(int id);
+        void DeletePodcastById(Guid id);
+        Podcast GetPodcast(Guid id);
         void UpdatPodcaste(Podcast podcast);
     }
 }

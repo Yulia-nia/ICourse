@@ -19,30 +19,26 @@ namespace ICourses.Controllers
         {
             _context = context;
         }
-
-        // GET: Subjects
-        
+       
         public async Task<IActionResult> Index()
         {
             return View(await _context.Subjects.ToListAsync());
         }
-
-        // GET: Subjects/Details/5
        
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var subject = await _context.Subjects
+            var subject = await _context.Subjects.Include(i=>i.Courses)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            ViewBag.Courses = _context.Courses
-               .Include(c => c.Subject)
-               .Include(c => c.Author)
-               .Where(_ => _.SubjectID == id);
+            //ViewBag.Courses = _context.Courses
+            //   .Include(c => c.Subject)
+            //   .Include(c => c.Author)
+            //   .Where(_ => _.SubjectId == id);
 
 
             if (subject == null)
@@ -55,20 +51,12 @@ namespace ICourses.Controllers
 
 
 
-
-
-
-
-        // GET: Subjects/Create
         [Authorize(Roles = "admin,moderator")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Subjects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator")]
@@ -83,9 +71,8 @@ namespace ICourses.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Edit/5
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -100,13 +87,10 @@ namespace ICourses.Controllers
             return View(subject);
         }
 
-        // POST: Subjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Subject subject)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] Subject subject)
         {
             if (id != subject.Id)
             {
@@ -136,9 +120,8 @@ namespace ICourses.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Delete/5
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -155,11 +138,10 @@ namespace ICourses.Controllers
             return View(subject);
         }
 
-        // POST: Subjects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var subject = await _context.Subjects.FindAsync(id);
             _context.Subjects.Remove(subject);
@@ -167,7 +149,7 @@ namespace ICourses.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubjectExists(int id)
+        private bool SubjectExists(Guid id)
         {
             return _context.Subjects.Any(e => e.Id == id);
         }

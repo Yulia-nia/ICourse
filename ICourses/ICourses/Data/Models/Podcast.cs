@@ -10,11 +10,11 @@ namespace ICourses.Data.Models
     public class Podcast
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public int Duration { get; set; }
+        public double Duration { get; set; }
         public string Content { get; set; }
         public Module Module { get; set; }
-        public int ModuleId { get; set; }
+        public Guid ModuleId { get; set; }
     }
 }

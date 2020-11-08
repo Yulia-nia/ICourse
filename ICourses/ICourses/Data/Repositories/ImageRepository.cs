@@ -28,7 +28,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteImageById(int id)
+        public void DeleteImageById(Guid id)
         {
             var image = _appDbContext.Images.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Images.Remove(image);
@@ -40,7 +40,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Images.ToList();
         }
 
-        public Image GetImage(int id)
+        public Image GetImage(Guid id)
         {
             return _appDbContext.Images.Where(x => x.Id == id).FirstOrDefault();
 

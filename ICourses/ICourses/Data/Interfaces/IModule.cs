@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddModule(Module module);
         IEnumerable<Module> GetAllModules();
         void DeleteModule(Module module);
-        void DeleteModuleById(int id);
-        Module GetModule(int id);
+        void DeleteModuleById(Guid id);
+        Module GetModule(Guid id);
         void UpdateModule(Module module);
 
         IEnumerable<TextMaterial> GetTextMaterials(Module module);

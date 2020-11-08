@@ -9,7 +9,7 @@ namespace ICourses.Data.Models
 {
     public class Image
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Path { get; set; }
         public DateTime UploadDate { get; set; } = DateTime.Now;

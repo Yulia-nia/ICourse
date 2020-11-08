@@ -29,7 +29,7 @@ namespace ICourses.Controllers
         }
 
         // GET: Videos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -52,7 +52,6 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
-            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Name");
             return View();
         }
 
@@ -62,21 +61,24 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Url,Moduleid")] Video video)
+        public async Task<IActionResult> Create(Guid id,[Bind("Id,Name,Url,Moduleid")] Video video)
         {
             if (ModelState.IsValid)
             {
+                video.Id = Guid.NewGuid();
+                video.Moduleid = _context.Modules.FirstOrDefault(_ => _.Id == id).Id;
+
                 _context.Add(video);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
             }
-            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
+           
             return View(video);
         }
 
         // GET: Videos/Edit/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -98,7 +100,7 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Url,Moduleid")] Video video)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Url,Moduleid")] Video video)
         {
             if (id != video.Id)
             {
@@ -131,7 +133,7 @@ namespace ICourses.Controllers
 
         // GET: Videos/Delete/5
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -153,7 +155,7 @@ namespace ICourses.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var video = await _context.Videos.FindAsync(id);
             _context.Videos.Remove(video);
@@ -161,7 +163,7 @@ namespace ICourses.Controllers
             return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
         }
 
-        private bool VideoExists(int id)
+        private bool VideoExists(Guid id)
         {
             return _context.Videos.Any(e => e.Id == id);
         }

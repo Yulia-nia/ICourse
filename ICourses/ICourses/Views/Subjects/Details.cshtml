@@ -16,16 +16,16 @@
 
 <div class="my-3 p-3 alert-info rounded shadow-sm">
     <div class="row">
-        @if (ViewBag.Courses != null)
+        @if (Model.Courses != null)
         {
 
-        @foreach (var item in @ViewBag.Courses)
+        @foreach (var item in Model.Courses)
         {
             <div class="col-md-6">
                 <div class="row no-gutters border rounded bg-white  flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                     <div class="col p-4 d-flex flex-column position-static">
                         <h3 class="mb-0">@item.Name</h3>
-                        <p class="mb-0">@item.Author.Email</p>
+                         <p class="mb-0">@item.AuthorId</p>
 
                         <div class="mb-1 text-muted">@item.Modified</div>
                         <div class="mb-1 text-muted">Язык:  @item.Language</div>
@@ -46,12 +46,15 @@
                             <!--редактирование и удаление-->
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-outline-secondary" role="button"  asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Id">
+                                    <a class="btn btn-sm btn-outline-secondary" role="button" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Id">
                                         Редактировать
                                     </a>
-                                    <a class="btn btn-sm btn-outline-secondary"  asp-controller="Courses" asp-action="Delete" asp-route-id="@item.Id">
-                                        Удалить
-                                    </a>
+                                    <form  asp-controller="Courses" asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                     
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            Удалить
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
 
@@ -66,6 +69,6 @@
 @if (User.IsInRole("admin") || User.IsInRole("teacher"))
 {
     <p>
-        <a asp-controller="Courses" asp-action="Create">Добавить новый курс</a>
+        <a asp-controller="Courses" asp-action="Create" asp-route-id="@Model.Id">Добавить новый курс</a>
     </p>
 }

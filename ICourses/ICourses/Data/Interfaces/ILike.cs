@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddLike(Like like);
         IEnumerable<Like> GetAllLikes();
         void DeleteLike(Like like);
-        void DeleteLikeById(int id);
-        Like GetLike(int id);
+        void DeleteLikeById(Guid id);
+        Like GetLike(Guid id);
         void UpdateLike(Like like);
     }
 }

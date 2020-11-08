@@ -28,7 +28,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeletePodcastById(int id)
+        public void DeletePodcastById(Guid id)
         {
             var podcast = _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Podcasts.Remove(podcast);
@@ -40,7 +40,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Podcasts.ToList();
         }
 
-        public Podcast GetPodcast(int id)
+        public Podcast GetPodcast(Guid id)
         {
             return _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefault();
         }

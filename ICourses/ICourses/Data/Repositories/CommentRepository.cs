@@ -26,7 +26,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.Comments.Remove(comment);
             _appDbContext.SaveChanges();
         }
-        public void DeleteCommentById(int id)
+        public void DeleteCommentById(Guid id)
         {
             var comment = _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Comments.Remove(comment);
@@ -38,7 +38,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Comments.ToList();
         }
 
-        public Comment GetComment(int id)
+        public Comment GetComment(Guid id)
         {
             return _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefault();
         }

@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddComment(Comment comment);
         IEnumerable<Comment> GetAllComments();
         void DeleteComment(Comment comment);
-        void DeleteCommentById(int id);
-        Comment GetComment(int id);
+        void DeleteCommentById(Guid id);
+        Comment GetComment(Guid id);
         void UpdateComment(Comment comment);
     }
 }

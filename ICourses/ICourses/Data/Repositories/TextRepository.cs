@@ -27,7 +27,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteTextMaterialById(int id)
+        public void DeleteTextMaterialById(Guid id)
         {
             var text = _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.TextMaterials.Remove(text);
@@ -39,7 +39,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.TextMaterials.ToList();
         }
 
-        public TextMaterial GetTextMaterial(int id)
+        public TextMaterial GetTextMaterial(Guid id)
         {
             return _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefault();
         }

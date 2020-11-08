@@ -11,7 +11,7 @@ namespace ICourses.Data.Interfaces
         void AddCourse(Course course);
         IEnumerable<Course> GetAllCourses();
         void DeleteCourse(Course course);
-        Course GetCourse(int id);
+        Course GetCourse(Guid id);
         void UpdateCourse(Course course);
 
         IEnumerable<Comment> GetComments(Course course);

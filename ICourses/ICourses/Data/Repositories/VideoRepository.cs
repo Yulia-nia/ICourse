@@ -28,7 +28,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteVideoById(int id)
+        public void DeleteVideoById(Guid id)
         {
             var video = _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Videos.Remove(video);
@@ -40,7 +40,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Videos.ToList();
         }
 
-        public Video GetVideo(int id)
+        public Video GetVideo(Guid id)
         {
             return _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefault();
         }

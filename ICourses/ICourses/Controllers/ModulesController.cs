@@ -8,28 +8,29 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ICourses.Controllers
 {
     [Authorize]
     public class ModulesController : Controller
     {
+        readonly UserManager<User> _userManager;
         private readonly AppDbContext _context;
 
-        public ModulesController(AppDbContext context)
+        public ModulesController(AppDbContext context, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
-        // GET: Modules
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(Guid id)
         {
             var appDbContext = _context.Modules.Where(_ => _.CourseId == id);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Modules/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -38,6 +39,8 @@ namespace ICourses.Controllers
 
             var @module = await _context.Modules
                 .Include(_ => _.Course)
+                .Include(v => v.Videos)
+                .Include(t => t.TextMaterials)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             ViewBag.Texts = _context.TextMaterials.Where(_ => _.ModuleId == id).ToList();
@@ -53,25 +56,23 @@ namespace ICourses.Controllers
         }
 
 
-        // GET: Modules/Create
         [Authorize(Roles = "admin,teacher")]
-        public IActionResult Create()
+        public IActionResult Create(Guid? id)
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
+
             return View();
         }
-
-        // POST: Modules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Modified,Name,Description,CourseId")] Module @module)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
         {
             if (ModelState.IsValid)
             {
+                @module.Id = Guid.NewGuid();
+                @module.Modified = DateTime.Now;
+                @module.CourseId = _context.Courses.FirstOrDefault(_ => _.Id == id).Id;
                 _context.Add(@module);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Courses", new { id = module.CourseId });
@@ -80,9 +81,10 @@ namespace ICourses.Controllers
             return View(@module);
         }
 
-        // GET: Modules/Edit/5
+
+
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -98,13 +100,10 @@ namespace ICourses.Controllers
             return View(@module);
         }
 
-        // POST: Modules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
         {
             if (id != @module.Id)
             {
@@ -129,15 +128,16 @@ namespace ICourses.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = module.CourseId });
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
             return View(@module);
         }
 
-        // GET: Modules/Delete/5
+
+
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -154,20 +154,21 @@ namespace ICourses.Controllers
 
             return View(@module);
         }
-
-        // POST: Modules/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var @module = await _context.Modules.FindAsync(id);
             _context.Modules.Remove(@module);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Courses", new { id = module.CourseId });
         }
 
-        private bool ModuleExists(int id)
+
+
+        private bool ModuleExists(Guid id)
         {
             return _context.Modules.Any(e => e.Id == id);
         }

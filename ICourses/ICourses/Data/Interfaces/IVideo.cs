@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddVideo(Video video);
         IEnumerable<Video> GetAllVideos();
         void DeleteVideo(Video video);
-        void DeleteVideoById(int id);
-        Video GetVideo(int id);
+        void DeleteVideoById(Guid id);
+        Video GetVideo(Guid id);
         void UpdateVideo(Video video);
 
     }

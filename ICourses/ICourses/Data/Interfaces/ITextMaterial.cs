@@ -11,8 +11,8 @@ namespace ICourses.Data.Interfaces
         void AddTextMaterial(TextMaterial text);
         IEnumerable<TextMaterial> GetAllTextMaterials();
         void DeleteTextMaterial(TextMaterial text);
-        void DeleteTextMaterialById(int id);
-        TextMaterial GetTextMaterial(int id);
+        void DeleteTextMaterialById(Guid id);
+        TextMaterial GetTextMaterial(Guid id);
         void UpdateTextMaterial(TextMaterial text);
     }
 }

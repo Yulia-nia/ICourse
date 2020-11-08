@@ -7,7 +7,7 @@
 @if (User.IsInRole("admin") || User.IsInRole("teacher"))
 {
     <p>
-        <a asp-controller="Modules" asp-action="Create">Добавить новый модуль</a>
+        <a asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">Добавить новый модуль</a>
     </p>
 }
 
@@ -33,7 +33,7 @@
 
                     <td>
                         <a asp-controller="Modules" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-=
+                        =
                     </td>
                 </tr>
             }
@@ -44,18 +44,32 @@
 
 <div class="container">
 
-    @if(ViewBag.Comments != null)
+    @if (ViewBag.Comments != null)
     {
         <p>Лист все коментов</p>
         @foreach (var item in @ViewBag.Comments)
         {
             <h2>@item.Title</h2>
             <p>@item.User.Email</p>
-            
+
             <p>@item.Text</p>
 
-            }
-            }
-</div>
+            @if (User.IsInRole("admin") || User.IsInRole("moderator"))
+            {
+                <form asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id" method="post">
 
-        <a asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="">Добавить коментарий</a>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+             }
+
+
+            }
+        }
+    </div>
+
+<a asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
+
+
+

@@ -9,11 +9,11 @@ namespace ICourses.Data.Models
     public class Video
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
         public Module Module {get; set;}
-        public int Moduleid { get; set; }
+        public Guid Moduleid { get; set; }
         
     }
 }

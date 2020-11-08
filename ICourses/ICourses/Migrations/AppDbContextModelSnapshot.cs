@@ -21,13 +21,12 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
@@ -38,33 +37,38 @@ namespace ICourses.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Course", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AuthorID")
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsFavorite")
                         .HasColumnType("bit");
@@ -78,26 +82,25 @@ namespace ICourses.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubjectID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorId1");
 
                     b.HasIndex("ImageId");
 
-                    b.HasIndex("SubjectID");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Image", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Path")
                         .IsRequired()
@@ -113,16 +116,15 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Like", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
@@ -138,19 +140,18 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Module", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
@@ -169,19 +170,18 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Podcast", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
+                    b.Property<double>("Duration")
+                        .HasColumnType("float");
 
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -195,10 +195,9 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Subject", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -213,10 +212,9 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.TextMaterial", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Context")
                         .HasColumnType("nvarchar(max)");
@@ -224,8 +222,8 @@ namespace ICourses.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -307,13 +305,12 @@ namespace ICourses.Migrations
 
             modelBuilder.Entity("ICourses.Data.Models.Video", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Moduleid")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Moduleid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -469,14 +466,14 @@ namespace ICourses.Migrations
 
                     b.HasOne("ICourses.Data.Models.User", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Course", b =>
                 {
                     b.HasOne("ICourses.Data.Models.User", "Author")
                         .WithMany("Courses")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorId1");
 
                     b.HasOne("ICourses.Data.Models.Image", "Image")
                         .WithMany()
@@ -484,7 +481,7 @@ namespace ICourses.Migrations
 
                     b.HasOne("ICourses.Data.Models.Subject", "Subject")
                         .WithMany("Courses")
-                        .HasForeignKey("SubjectID")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

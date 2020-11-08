@@ -10,11 +10,11 @@ namespace ICourses.Data.Models
     public class TextMaterial
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Context { get; set; }
         public Module Module { get; set; }
-        public int ModuleId { get; set; }
+        public Guid ModuleId { get; set; }
         public DateTime Modified { get; set; } = DateTime.Now;
     }
 }

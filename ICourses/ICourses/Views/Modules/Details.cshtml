@@ -61,13 +61,19 @@
                                 <h1>@Html.DisplayFor(model => model.Name)</h1>
                                 <span class="text-muted">@Html.DisplayFor(model => model.Modified)</span>
                                 <p class="lead text-muted">@Html.DisplayFor(model => model.Description)</p>
-                                @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
-                                {
+                                 @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
+                                 {
                                     <p>
-                                        <a class="btn my-2 btn-outline-info" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
-                                        <a class="btn my-2 btn-outline-info" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
-                                    </p>
-                                }
+                                    <a class="btn my-2 btn-outline-info" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+                                    @*<a class="btn my-2 btn-outline-info" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>*@
+                                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            Удалить
+                                        </button>
+                                    </form>
+
+                                    </p>                           
+                                 }
 
                             </div>
                         </section>
@@ -92,9 +98,15 @@
                                                     <a class="btn btn-sm btn-outline-info" role="button" asp-controller="TextMaterials" asp-action="Edit" asp-route-id="@item.Id">
                                                         Редактировать
                                                     </a>
-                                                    <a class="btn btn-sm btn-outline-info" asp-controller="TextMaterials" asp-action="Delete" asp-route-id="@item.Id">
+                                                    @*<a class="btn btn-sm btn-outline-info" asp-controller="TextMaterials" asp-action="Delete" asp-route-id="@item.Id">
                                                         Удалить
-                                                    </a>
+                                                    </a>*@
+                                                    <form asp-controller="TextMaterials" asp-action="Delete" asp-route-id="@item.Id" method="post">
+
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            Удалить
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         }
@@ -108,7 +120,7 @@
                         @if (User.IsInRole("admin") || (User.IsInRole("teacher")))
                         {
 
-                            <p><a asp-area="" asp-controller="TextMaterials" asp-action="Create">Create New Text Material</a></p>
+                            <p><a asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">Create New Text Material</a></p>
                         }
 
 
@@ -139,9 +151,15 @@
                                                     <a class="btn btn-sm btn-outline-info" role="button" asp-controller="Videos" asp-action="Edit" asp-route-id="@v.Id">
                                                         Редактировать
                                                     </a>
-                                                    <a class="btn btn-sm btn-outline-info" asp-controller="Videos" asp-action="Delete" asp-route-id="@v.Id">
+                                                    @*<a class="btn btn-sm btn-outline-info" asp-controller="Videos" asp-action="Delete" asp-route-id="@v.Id">
                                                         Удалить
-                                                    </a>
+                                                    </a>*@
+                                                    <form asp-controller="Videos" asp-action="Delete" asp-route-id="@v.Id" method="post">
+
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            Удалить
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         }
@@ -156,7 +174,7 @@
                         {
 
                             <p>
-                                <a asp-area="" asp-controller="Videos" asp-action="Create">Create New Video</a>
+                                <a asp-area="" asp-controller="Videos" asp-action="Create" asp-route-id="@Model.Id">Create New Video</a>
                             </p>
                         }
 

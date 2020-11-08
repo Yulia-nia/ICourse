@@ -28,7 +28,7 @@ namespace ICourses.Data.Repositories
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteLikeById(int id)
+        public void DeleteLikeById(Guid id)
         {
             var like = _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Likes.Remove(like);
@@ -40,7 +40,7 @@ namespace ICourses.Data.Repositories
             return _appDbContext.Likes.ToList();
         }
 
-        public Like GetLike(int id)
+        public Like GetLike(Guid id)
         {
             return _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefault();
         }

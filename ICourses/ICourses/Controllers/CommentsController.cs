@@ -7,27 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ICourses.Views
 {
     public class CommentsController : Controller
     {
+        UserManager<User> _userManager;
         private readonly AppDbContext _context;
 
-        public CommentsController(AppDbContext context)
+        public CommentsController(AppDbContext context, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
-        // GET: Comments
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Comments.Include(c => c.Course).Include(c => c.User);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Comments/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -46,34 +47,37 @@ namespace ICourses.Views
             return View(comment);
         }
 
-        // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Comments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,UserId,CourseId,Modified")] Comment comment)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Title,Text,UserId,CourseId,Modified")] Comment comment)
         {
+            string uid = _userManager.GetUserId(User);
+            User user = await _userManager.FindByIdAsync(uid);
+
             if (ModelState.IsValid)
             {
+                comment.Id = Guid.NewGuid();
+                comment.Modified = DateTime.Now;
+                comment.CourseId = _context.Courses.FirstOrDefault(_ => _.Id == id).Id;
+                comment.UserId = user.Id;
+
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 
-        // GET: Comments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -90,12 +94,9 @@ namespace ICourses.Views
             return View(comment);
         }
 
-        // POST: Comments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,UserId,CourseId,Modified")] Comment comment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Text,UserId,CourseId,Modified")] Comment comment)
         {
             if (id != comment.Id)
             {
@@ -120,15 +121,14 @@ namespace ICourses.Views
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 
-        // GET: Comments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -147,18 +147,17 @@ namespace ICourses.Views
             return View(comment);
         }
 
-        // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var comment = await _context.Comments.FindAsync(id);
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
         }
 
-        private bool CommentExists(int id)
+        private bool CommentExists(Guid id)
         {
             return _context.Comments.Any(e => e.Id == id);
         }
