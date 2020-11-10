@@ -8,11 +8,11 @@ namespace ICourses.Data.Interfaces
 {
     public interface IPodcast
     {
-        void AddPodcast(Podcast podcast);
-        IEnumerable<Podcast> GetAllPodcasts();
-        void DeletePodcast(Podcast podcast);
-        void DeletePodcastById(Guid id);
-        Podcast GetPodcast(Guid id);
-        void UpdatPodcaste(Podcast podcast);
+        Task AddPodcast(Podcast podcast);
+        Task<IEnumerable<Podcast>> GetAllPodcasts();
+        Task DeletePodcast(Podcast podcast);
+        Task DeletePodcastById(Guid id);
+        Task<Podcast> GetPodcast(Guid id);
+        Task UpdatPodcaste(Podcast podcast);
     }
 }

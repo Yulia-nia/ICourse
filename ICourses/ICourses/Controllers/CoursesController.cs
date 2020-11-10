@@ -20,10 +20,14 @@ namespace ICourses.Controllers
     public class CoursesController : Controller
     {
         UserManager<User> _userManager;
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public CoursesController(AppDbContext context, UserManager<User> userManager)
+        private readonly ICourse _course;
+
+
+        public CoursesController(CourseDbContext context, UserManager<User> userManager, ICourse course)
         {
+            _course = course;
             _userManager = userManager;
             _context = context;
         }
@@ -64,31 +68,43 @@ namespace ICourses.Controllers
 
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create(Guid? id)
-        {
-            
+        {            
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Description,Modified,Language,IsFavorite,SubjectId,AuthorId")] Course course)
+        public async Task<IActionResult> Create(Guid id, CreateCourseViewModel course)
         {
+
+            byte[] imageData = null;
+
+            using (var binaryReader = new BinaryReader(course.Image.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)course.Image.Length);
+            }
+
             string uid = _userManager.GetUserId(User);
             User user = await _userManager.FindByIdAsync(uid);
 
             if (ModelState.IsValid)
             {
-                course.Id = Guid.NewGuid();
-                course.Modified = DateTime.Now;
-                course.SubjectId = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id;
-                course.AuthorId = user.Id;
-                _context.Add(course);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Subjects", new { id = course.SubjectId });
+                Course new_course = new Course()
+                {
+                    Id = Guid.NewGuid(),
+                    Modified = DateTime.Now,
+                    Name = course.Name,
+                    Description = course.Description,
+                    Language = course.Language,
+                    Image = imageData,
+                    SubjectId = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id,
+                    AuthorId = user.Id,             
+                };
+                await _course.AddCourse(new_course);
+                return RedirectToAction("Details", "Subjects", new { id = new_course.SubjectId });
             }
-    
-            return View(course);
+            return View();
         }
 
 

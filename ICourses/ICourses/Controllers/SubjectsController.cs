@@ -13,9 +13,9 @@ namespace ICourses.Controllers
 {
     public class SubjectsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public SubjectsController(AppDbContext context)
+        public SubjectsController(CourseDbContext context)
         {
             _context = context;
         }

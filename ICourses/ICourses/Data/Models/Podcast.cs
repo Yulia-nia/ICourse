@@ -9,7 +9,8 @@ namespace ICourses.Data.Models
 {
     public class Podcast
     {
-        [Key]
+
+        [Required]
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Duration { get; set; }

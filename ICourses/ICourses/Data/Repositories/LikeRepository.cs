@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,46 +10,46 @@ namespace ICourses.Data.Repositories
 {
     public class LikeRepository : ILike
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly CourseDbContext _appDbContext;
 
-        public LikeRepository(AppDbContext appDbContext)
+        public LikeRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
        
-        public void AddLike(Like like)
+        public async Task AddLike(Like like)
         {
-            _appDbContext.Likes.Add(like);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Likes.AddAsync(like);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteLike(Like like)
+        public async Task DeleteLike(Like like)
         {
             _appDbContext.Likes.Remove(like);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteLikeById(Guid id)
+        public async Task DeleteLikeById(Guid id)
         {
-            var like = _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefault();
+            var like = await _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.Likes.Remove(like);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Like> GetAllLikes()
+        public async Task<IEnumerable<Like>> GetAllLikes()
         {
-            return _appDbContext.Likes.ToList();
+            return await _appDbContext.Likes.ToListAsync();
         }
 
-        public Like GetLike(Guid id)
+        public async Task<Like> GetLike(Guid id)
         {
-            return _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateLike(Like like)
+        public async Task UpdateLike(Like like)
         {
             _appDbContext.Likes.Update(like);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

@@ -8,13 +8,13 @@ namespace ICourses.Data.Interfaces
 {
     public interface ICourse
     {
-        void AddCourse(Course course);
-        IEnumerable<Course> GetAllCourses();
-        void DeleteCourse(Course course);
-        Course GetCourse(Guid id);
-        void UpdateCourse(Course course);
+        Task AddCourse(Course course);
+        Task<IEnumerable<Course>> GetAllCourses();
+        Task DeleteCourse(Course course);
+        Task<Course> GetCourse(Guid id);
+        Task UpdateCourse(Course course);
 
-        IEnumerable<Comment> GetComments(Course course);
-        IEnumerable<Course> GetFavoriteCourses();
+        Task<IEnumerable<Comment>> GetComments(Course course);
+        Task<IEnumerable<Course>> GetFavoriteCourses();
     }
 }

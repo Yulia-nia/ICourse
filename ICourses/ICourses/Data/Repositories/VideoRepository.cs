@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,46 +10,46 @@ namespace ICourses.Data.Repositories
 {
     public class VideoRepository : IVideo
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly CourseDbContext _appDbContext;
 
-        public VideoRepository(AppDbContext appDbContext)
+        public VideoRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
 
-        public void AddVideo(Video video)
+        public async Task AddVideo(Video video)
         {
-            _appDbContext.Videos.Add(video);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Videos.AddAsync(video);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteVideo(Video video)
+        public async Task DeleteVideo(Video video)
         {
             _appDbContext.Videos.Remove(video);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteVideoById(Guid id)
+        public async Task DeleteVideoById(Guid id)
         {
-            var video = _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefault();
+            var video = await _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.Videos.Remove(video);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Video> GetAllVideos()
+        public async Task<IEnumerable<Video>> GetAllVideos()
         {
-            return _appDbContext.Videos.ToList();
+            return await _appDbContext.Videos.ToListAsync();
         }
 
-        public Video GetVideo(Guid id)
+        public async Task<Video> GetVideo(Guid id)
         {
-            return _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateVideo(Video video)
+        public async Task UpdateVideo(Video video)
         {
             _appDbContext.Videos.Update(video);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

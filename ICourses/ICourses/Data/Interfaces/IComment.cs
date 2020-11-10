@@ -8,11 +8,11 @@ namespace ICourses.Data.Interfaces
 {
     public interface IComment
     {
-        void AddComment(Comment comment);
-        IEnumerable<Comment> GetAllComments();
-        void DeleteComment(Comment comment);
-        void DeleteCommentById(Guid id);
-        Comment GetComment(Guid id);
-        void UpdateComment(Comment comment);
+        Task AddComment(Comment comment);
+        Task<IEnumerable<Comment>> GetAllComments();
+        Task DeleteComment(Comment comment);
+        Task DeleteCommentById(Guid id);
+        Task<Comment> GetComment(Guid id);
+        Task UpdateComment(Comment comment);
     }
 }

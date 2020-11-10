@@ -14,9 +14,9 @@ namespace ICourses.Controllers
     [Authorize]
     public class PodcastsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public PodcastsController(AppDbContext context)
+        public PodcastsController(CourseDbContext context)
         {
             _context = context;
         }

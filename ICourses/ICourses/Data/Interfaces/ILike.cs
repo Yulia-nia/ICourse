@@ -8,11 +8,11 @@ namespace ICourses.Data.Interfaces
 {
     public interface ILike
     {
-        void AddLike(Like like);
-        IEnumerable<Like> GetAllLikes();
-        void DeleteLike(Like like);
-        void DeleteLikeById(Guid id);
-        Like GetLike(Guid id);
-        void UpdateLike(Like like);
+        Task AddLike(Like like);
+        Task<IEnumerable<Like>> GetAllLikes();
+        Task DeleteLike(Like like);
+        Task DeleteLikeById(Guid id);
+        Task<Like> GetLike(Guid id);
+        Task UpdateLike(Like like);
     }
 }

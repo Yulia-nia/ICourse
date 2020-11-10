@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data. Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,89 +10,50 @@ namespace ICourses.Data.Repositories
 {
     public class SubjectRepository : ISubject
     {
-        /*public IEnumerable<Subject> Subjects {
-            get {
-                return new List<Subject>(new Subject { Id = 1, Name = "Прога", Description = "Тут прогают",
-                    Courses = new List<Course>(
-                new Course { Name = "c++", Id = 2, Description = "ebani plusi", Language = "Russian",
-                    SubjectID = 1, TagId = 3, 
-                    Likes=new List<Like>(new Like
-                    {
-                        Id = 4,
-                        CourseId = 2,
-                        UserId = 5
-                    }),
+        private readonly CourseDbContext _appDbContext;
 
-                }});*/
-        //public ICourse _courses = new CourseRepository();
-
-        //public IList<Subject> _subjects;
-        /*= new List<Subject>(
-                    new Subject
-                    {
-                        Id = 1,
-                        Name = "Прога",
-                        Description = "Typo progeri",
-                        Courses = _courses.GetAllCourses().ToList(),
-                        //Modified = DateTime.Now
-
-                    },
-                    new Subject
-                    {
-                        Id = 2,
-                        Name = "Прога",
-                        Description = "Typo progeri",
-                        Courses = (ICollection<Course>)_courses.GetAllCourses(),
-                        //Modified = DateTime.Now
-
-                    }
-                    );*/
-        // public readonly IList<Subject> _subjects;
-
-        private readonly AppDbContext _appDbContext;
-
-        public SubjectRepository(AppDbContext appDbContext)
+        public SubjectRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
-        public void AddSubject(Subject subject)
+        public async Task AddSubject(Subject subject)
         {
-            _appDbContext.Subjects.Add(subject);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Subjects.AddAsync(subject);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteSubject(Subject subject)
+        public async Task DeleteSubject(Subject subject)
         {
             _appDbContext.Subjects.Remove(subject);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteSubjectById(Guid id)
+        public async Task DeleteSubjectById(Guid id)
         {
-            var subject = _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefault();
+            var subject = await _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.Subjects.Remove(subject);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Subject> GetAllSubject()
+        public async Task<IEnumerable<Subject>> GetAllSubject()
         {
-            return _appDbContext.Subjects.ToList();
+            return await _appDbContext.Subjects.ToListAsync();
         }
 
-        public Subject GetSubject(Guid id)
+        public async Task<Subject> GetSubject(Guid id)
         {
-            return _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateSubject(Subject subject)
+        public async Task UpdateSubject(Subject subject)
         {
             _appDbContext.Subjects.Update(subject);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Course> GetCourses(Subject subject)
+        public async Task<IEnumerable<Course>> GetCourses(Subject subject)
         {
-            var courses = _appDbContext.Subjects.Where(c => c.Id == subject.Id)?.SelectMany(c => c.Courses).ToList();
+            var courses = await _appDbContext.Subjects.Where(c => c.Id == subject.Id)?.SelectMany(c => c.Courses).ToListAsync();
             return courses.AsReadOnly(); ;
         }
 

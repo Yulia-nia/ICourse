@@ -4,16 +4,14 @@ using ICourses.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICourses.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20201108013659_New")]
-    partial class New
+    [DbContext(typeof(CourseDbContext))]
+    partial class CourseDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,17 +37,14 @@ namespace ICourses.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -60,17 +55,14 @@ namespace ICourses.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId1")
+                    b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<bool>("IsFavorite")
                         .HasColumnType("bit");
@@ -89,31 +81,11 @@ namespace ICourses.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
-
-                    b.HasIndex("ImageId");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("ICourses.Data.Models.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Like", b =>
@@ -125,17 +97,14 @@ namespace ICourses.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Likes");
                 });
@@ -152,8 +121,8 @@ namespace ICourses.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
@@ -164,8 +133,6 @@ namespace ICourses.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("ImageId");
 
                     b.ToTable("Modules");
                 });
@@ -244,6 +211,12 @@ namespace ICourses.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("AvatarId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -468,18 +441,14 @@ namespace ICourses.Migrations
 
                     b.HasOne("ICourses.Data.Models.User", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Course", b =>
                 {
                     b.HasOne("ICourses.Data.Models.User", "Author")
                         .WithMany("Courses")
-                        .HasForeignKey("AuthorId1");
-
-                    b.HasOne("ICourses.Data.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("ICourses.Data.Models.Subject", "Subject")
                         .WithMany("Courses")
@@ -498,7 +467,7 @@ namespace ICourses.Migrations
 
                     b.HasOne("ICourses.Data.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Module", b =>
@@ -508,10 +477,6 @@ namespace ICourses.Migrations
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ICourses.Data.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
                 });
 
             modelBuilder.Entity("ICourses.Data.Models.Podcast", b =>

@@ -1,7 +1,6 @@
 ﻿@model ICourses.ViewModel.LoginViewModel
 
-
-<h2>Вход в приложение</h2>
+<h1 class="h2 mb-3 font-weight-normal">Вход в приложение</h1>
 <form method="post" asp-controller="Account" asp-action="Login"
       asp-route-returnUrl="@Model.ReturnUrl">
     <div asp-validation-summary="ModelOnly"></div>
@@ -23,3 +22,5 @@
         <input type="submit" value="Войти" />
     </div>
 </form>
+
+

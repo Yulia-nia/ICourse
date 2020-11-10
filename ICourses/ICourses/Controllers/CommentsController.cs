@@ -14,9 +14,9 @@ namespace ICourses.Views
     public class CommentsController : Controller
     {
         UserManager<User> _userManager;
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public CommentsController(AppDbContext context, UserManager<User> userManager)
+        public CommentsController(CourseDbContext context, UserManager<User> userManager)
         {
             _userManager = userManager;
             _context = context;

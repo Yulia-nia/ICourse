@@ -8,12 +8,12 @@ namespace ICourses.Data.Interfaces
 {
     public interface IVideo
     {
-        void AddVideo(Video video);
-        IEnumerable<Video> GetAllVideos();
-        void DeleteVideo(Video video);
-        void DeleteVideoById(Guid id);
-        Video GetVideo(Guid id);
-        void UpdateVideo(Video video);
+        Task AddVideo(Video video);
+        Task<IEnumerable<Video>> GetAllVideos();
+        Task DeleteVideo(Video video);
+        Task DeleteVideoById(Guid id);
+        Task<Video> GetVideo(Guid id);
+        Task UpdateVideo(Video video);
 
     }
 }

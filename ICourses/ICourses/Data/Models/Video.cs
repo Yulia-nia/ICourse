@@ -8,7 +8,8 @@ namespace ICourses.Data.Models
 {
     public class Video
     {
-        [Key]
+
+        [Required]
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }

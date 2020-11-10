@@ -8,12 +8,12 @@ namespace ICourses.Data.Interfaces
 {
     public interface IModule
     {
-        void AddModule(Module module);
-        IEnumerable<Module> GetAllModules();
-        void DeleteModule(Module module);
-        void DeleteModuleById(Guid id);
-        Module GetModule(Guid id);
-        void UpdateModule(Module module);
+        Task AddModule(Module module);
+        Task<IEnumerable<Module>> GetAllModules();
+        Task DeleteModule(Module module);
+        Task DeleteModuleById(Guid id);
+        Task<Module> GetModule(Guid id);
+        Task UpdateModule(Module module);
 
         IEnumerable<TextMaterial> GetTextMaterials(Module module);
         IEnumerable<Video> GetVideos(Module module);

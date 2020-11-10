@@ -14,9 +14,9 @@ namespace ICourses.Controllers
     [Authorize]
     public class VideosController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public VideosController(AppDbContext context)
+        public VideosController(CourseDbContext context)
         {
             _context = context;
         }

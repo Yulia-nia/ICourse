@@ -14,9 +14,9 @@ namespace ICourses.Controllers
     [Authorize]
     public class TextMaterialsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
 
-        public TextMaterialsController(AppDbContext context)
+        public TextMaterialsController(CourseDbContext context)
         {
             _context = context;
         }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace ICourses.Data.Models
 {
     public class Comment
-    { 
-        [Key]
+    {
+        [Required]
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }

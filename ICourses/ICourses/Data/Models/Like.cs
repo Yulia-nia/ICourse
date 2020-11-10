@@ -8,7 +8,7 @@ namespace ICourses.Data.Models
 {
     public class Like
     {
-        [Key]
+        [Required]
         public Guid Id { get; set; }
         public User User { get; set; }
         public string UserId { get; set; }

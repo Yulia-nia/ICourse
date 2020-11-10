@@ -8,12 +8,12 @@ namespace ICourses.Data.Interfaces
 {
     public interface ISubject
     {
-        void AddSubject(Subject subject);
-        IEnumerable<Subject> GetAllSubject();
-        void DeleteSubject(Subject subject);
-        void DeleteSubjectById(Guid id);
-        Subject GetSubject(Guid id);
-        void UpdateSubject(Subject subject);
-        IEnumerable<Course> GetCourses(Subject subject);
+        Task AddSubject(Subject subject);
+        Task<IEnumerable<Subject>> GetAllSubject();
+        Task DeleteSubject(Subject subject);
+        Task DeleteSubjectById(Guid id);
+        Task<Subject> GetSubject(Guid id);
+        Task UpdateSubject(Subject subject);
+        Task<IEnumerable<Course>> GetCourses(Subject subject);
     }
 }

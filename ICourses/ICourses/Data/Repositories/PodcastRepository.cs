@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data. Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,46 +10,46 @@ namespace ICourses.Data.Repositories
 {
     public class PodcastRepository : IPodcast
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly CourseDbContext _appDbContext;
 
-        public PodcastRepository(AppDbContext appDbContext)
+        public PodcastRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
 
-        public void AddPodcast(Podcast podcast)
+        public async Task AddPodcast(Podcast podcast)
         {
-            _appDbContext.Podcasts.Add(podcast);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Podcasts.AddAsync(podcast);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeletePodcast(Podcast podcast)
+        public async Task DeletePodcast(Podcast podcast)
         {
             _appDbContext.Podcasts.Remove(podcast);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeletePodcastById(Guid id)
+        public async Task DeletePodcastById(Guid id)
         {
-            var podcast = _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefault();
+            var podcast = await _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.Podcasts.Remove(podcast);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Podcast> GetAllPodcasts()
+        public async Task<IEnumerable<Podcast>> GetAllPodcasts()
         {
-            return _appDbContext.Podcasts.ToList();
+            return await _appDbContext.Podcasts.ToListAsync();
         }
 
-        public Podcast GetPodcast(Guid id)
+        public async Task<Podcast> GetPodcast(Guid id)
         {
-            return _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Podcasts.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdatPodcaste(Podcast podcast)
+        public async Task UpdatPodcaste(Podcast podcast)
         {
             _appDbContext.Podcasts.Update(podcast);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

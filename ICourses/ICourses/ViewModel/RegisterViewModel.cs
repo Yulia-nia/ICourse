@@ -8,9 +8,17 @@ namespace ICourses.ViewModel
 {
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "Логин")]
+        public string UserName { get; set; }
+
         [Required(ErrorMessage = "Не указан Email")]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Номер телефона")]
+        public string PhoneNumber { get; set; }
 
         [Required]
         [Display(Name = "Год рождения")]

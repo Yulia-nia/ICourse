@@ -1,5 +1,4 @@
 ﻿using ICourses.Data;
-using ICourses.Data.Interfases;
 using ICourses.Data.Models;
 using ICourses.Models;
 using ICourses.ViewModel;
@@ -25,7 +24,6 @@ namespace ICourses.Controllers
         UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         public IConfiguration _config;
-        //private readonly IUser _user;
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config/*, IUser iUser*/)
         {
             //_user = iUser;
@@ -41,14 +39,9 @@ namespace ICourses.Controllers
         }
        
         public async Task<IActionResult> Profile()
-        {
-            
+        {            
             var id = _userManager.GetUserId(User);
-            //User user = await _userManager.FindByIdAsync();
-
-            User user = await _userManager.FindByIdAsync(id);
-            //User user = _user.GetUserDB(_userManager.GetUserId(User));
-
+            User user = await _userManager.FindByIdAsync(id);    
             return View(user);
         }
 
@@ -58,7 +51,7 @@ namespace ICourses.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = model.Email, UserName = model.Email, Year = model.Year };
+                User user = new User { Email = model.Email, UserName = model.UserName, Year = model.Year, PhoneNumber = model.PhoneNumber };
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

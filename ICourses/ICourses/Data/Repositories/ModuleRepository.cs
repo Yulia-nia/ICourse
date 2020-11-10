@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,46 +10,46 @@ namespace ICourses.Data.Repositories
 {
     public class ModuleRepository : IModule
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly CourseDbContext _appDbContext;
 
-        public ModuleRepository(AppDbContext appDbContext)
+        public ModuleRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
 
-        public void AddModule(Module module)
+        public async Task AddModule(Module module)
         {
-            _appDbContext.Modules.Add(module);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Modules.AddAsync(module);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteModule(Module module)
+        public async Task DeleteModule(Module module)
         {
             _appDbContext.Modules.Remove(module);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteModuleById(Guid id)
+        public async Task DeleteModuleById(Guid id)
         {
-            var module = _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefault();
+            var module = await _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.Modules.Remove(module);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public Module GetModule(Guid id)
+        public async Task<Module> GetModule(Guid id)
         {
-            return _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Modules.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public IEnumerable<Module> GetAllModules()
+        public async Task<IEnumerable<Module>> GetAllModules()
         {
-            return _appDbContext.Modules.ToList();
+            return await _appDbContext.Modules.ToListAsync();
         }
 
-        public void UpdateModule(Module module)
+        public async Task UpdateModule(Module module)
         {
             _appDbContext.Modules.Update(module);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
         //public int GetCourseId(string name)

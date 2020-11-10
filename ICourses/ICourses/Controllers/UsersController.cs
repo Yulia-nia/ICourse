@@ -1,5 +1,4 @@
 ﻿using ICourses.Data;
-using ICourses.Data.Interfases;
 using ICourses.Data.Models;
 using ICourses.Data.Repositories;
 using ICourses.ViewModel;

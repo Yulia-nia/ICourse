@@ -9,6 +9,9 @@ using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using ICourses.Data.Interfaces;
+using System.IO;
+using ICourses.ViewModel;
 
 namespace ICourses.Controllers
 {
@@ -16,10 +19,13 @@ namespace ICourses.Controllers
     public class ModulesController : Controller
     {
         readonly UserManager<User> _userManager;
-        private readonly AppDbContext _context;
+        private readonly CourseDbContext _context;
+        private readonly IModule _module;
 
-        public ModulesController(AppDbContext context, UserManager<User> userManager)
+
+        public ModulesController(CourseDbContext context, UserManager<User> userManager, IModule module)
         {
+            _module = module;
             _userManager = userManager;
             _context = context;
         }
@@ -66,18 +72,30 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
+        public async Task<IActionResult> Create(Guid id, CreateModuleViewModel module)
         {
+            byte[] imageData = null;
+
+            using (var binaryReader = new BinaryReader(module.Image.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)module.Image.Length);
+            }
+
             if (ModelState.IsValid)
             {
-                @module.Id = Guid.NewGuid();
-                @module.Modified = DateTime.Now;
-                @module.CourseId = _context.Courses.FirstOrDefault(_ => _.Id == id).Id;
-                _context.Add(@module);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Courses", new { id = module.CourseId });
+                Module new_module = new Module
+                {
+                    Id = Guid.NewGuid(),
+                    Name = module.Name,
+                    Description = module.Description,
+                    Image = imageData,
+                    Modified = DateTime.Now,
+                    CourseId = _context.Courses.FirstOrDefault(_ => _.Id == id).Id,
+                };
+                await _module.AddModule(new_module);              
+                return RedirectToAction("Details", "Courses", new { id = new_module.CourseId });
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
             return View(@module);
         }
 

@@ -8,11 +8,11 @@ namespace ICourses.Data.Interfaces
 {
     public interface ITextMaterial
     {
-        void AddTextMaterial(TextMaterial text);
-        IEnumerable<TextMaterial> GetAllTextMaterials();
-        void DeleteTextMaterial(TextMaterial text);
-        void DeleteTextMaterialById(Guid id);
-        TextMaterial GetTextMaterial(Guid id);
-        void UpdateTextMaterial(TextMaterial text);
+        Task AddTextMaterial(TextMaterial text);
+        Task<IEnumerable<TextMaterial>> GetAllTextMaterials();
+        Task DeleteTextMaterial(TextMaterial text);
+        Task DeleteTextMaterialById(Guid id);
+        Task<TextMaterial> GetTextMaterial(Guid id);
+        Task UpdateTextMaterial(TextMaterial text);
     }
 }

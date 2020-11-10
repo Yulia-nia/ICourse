@@ -22,9 +22,9 @@ namespace ICourses.ViewModel
         [Display(Name = "Язык")]
         public string Language { get; set; }
 
-        [Display(Name = "Любимое")]
-        public bool IsFavorite { get; set; }
+        [Required]
+        [Display(Name = "Фото")]
+        public IFormFile Image { get; set; }
 
-        public string SubjectName { get; set; }
     }
 }

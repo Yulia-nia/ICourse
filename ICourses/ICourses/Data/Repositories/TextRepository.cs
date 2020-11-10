@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,45 +10,45 @@ namespace ICourses.Data.Repositories
 {
     public class TextRepository : ITextMaterial
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly CourseDbContext _appDbContext;
 
-        public TextRepository(AppDbContext appDbContext)
+        public TextRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
-        public void AddTextMaterial(TextMaterial text)
+        public async Task AddTextMaterial(TextMaterial text)
         {
-            _appDbContext.TextMaterials.Add(text);
-            _appDbContext.SaveChanges();
+            await _appDbContext.TextMaterials.AddAsync(text);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteTextMaterial(TextMaterial text)
+        public async Task DeleteTextMaterial(TextMaterial text)
         {
             _appDbContext.TextMaterials.Remove(text);
-            _appDbContext.SaveChanges();
+            await  _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteTextMaterialById(Guid id)
+        public async Task DeleteTextMaterialById(Guid id)
         {
-            var text = _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefault();
+            var text = await _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefaultAsync();
             _appDbContext.TextMaterials.Remove(text);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<TextMaterial> GetAllTextMaterials()
+        public async Task<IEnumerable<TextMaterial>> GetAllTextMaterials()
         {
-            return _appDbContext.TextMaterials.ToList();
+            return await _appDbContext.TextMaterials.ToListAsync();
         }
 
-        public TextMaterial GetTextMaterial(Guid id)
+        public async Task<TextMaterial> GetTextMaterial(Guid id)
         {
-            return _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateTextMaterial(TextMaterial text)
+        public async Task UpdateTextMaterial(TextMaterial text)
         {
             _appDbContext.TextMaterials.Update(text);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

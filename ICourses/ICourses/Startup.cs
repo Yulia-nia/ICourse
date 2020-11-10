@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ICourses.Data;
 using ICourses.Data.Interfaces;
-using ICourses.Data.Interfases;
 using ICourses.Data.Models;
 using ICourses.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -30,11 +29,11 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => 
+            services.AddDbContext<CourseDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>()
+                .AddEntityFrameworkStores<CourseDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
@@ -45,7 +44,6 @@ namespace ICourses
             services.AddTransient<ISubject, SubjectRepository>();
             services.AddTransient<ICourse, CourseRepository>();
             services.AddTransient<IModule, ModuleRepository>();
-            services.AddTransient<IImage, ImageRepository>();
             services.AddTransient<ILike, LikeRepository>();
             services.AddTransient<IComment, CommentRepository>();
             services.AddTransient<IPodcast, PodcastRepository>();
@@ -53,7 +51,7 @@ namespace ICourses
             services.AddTransient<ITextMaterial, TextRepository>();
             services.AddTransient<IVideo, VideoRepository>();
 
-            services.AddControllersWithViews();            
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,14 +71,14 @@ namespace ICourses
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();    
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    //pattern: "{controller=Subjects}/{action=Index}/{id?}");
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }

@@ -9,9 +9,9 @@ namespace ICourses.Data.Models
 {
     public class User : IdentityUser
     {
-        //[Key]
-        //public int Id { get; set; }
+       
         public int Year { get; set; }
+        public byte[] Avatar { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
 

@@ -11,14 +11,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ICourses.Data
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class CourseDbContext : IdentityDbContext<User>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public CourseDbContext(DbContextOptions<CourseDbContext> options) : base(options)
         {
             //Database.Migrate();
             Database.EnsureCreated();
-        }       
-
+        }
+      
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Module> Modules { get; set; }
@@ -27,7 +27,6 @@ namespace ICourses.Data
         public DbSet<Podcast> Podcasts {get; set;}
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes {get; set;}
-        public DbSet<Image> Images { get; set; }
         public override DbSet<User> Users { get; set; }
     }
 }

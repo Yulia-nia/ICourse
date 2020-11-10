@@ -1,68 +1,70 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ICourses.Data.Repositories
 {
     public class CourseRepository : ICourse
     {
-        private readonly AppDbContext _appDbContext;
-        public CourseRepository(AppDbContext appDbContext)
+        private readonly CourseDbContext _appDbContext;
+        public CourseRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
 
-        public void AddCourse(Course course)
+        public async Task AddCourse(Course course)
         {
-            _appDbContext.Courses.Add(course);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Courses.AddAsync(course);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteCourse(Course course)
+        public async Task DeleteCourse(Course course)
         {
             _appDbContext.Courses.Remove(course);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Course> GetAllCourses()
+        public async Task<IEnumerable<Course>> GetAllCourses()
         {
-            return _appDbContext.Courses.ToList();
+            return await _appDbContext.Courses.ToListAsync();
         }
 
-        public Course GetCourse(Guid id)
+        public async Task<Course> GetCourse(Guid id)
         {
-            return _appDbContext.Courses.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Courses.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
-        public void UpdateCourse(Course course)
+        public async Task UpdateCourse(Course course)
         {
             _appDbContext.Courses.Update(course);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Comment> GetComments(Course course)
+        public async Task<IEnumerable<Comment>> GetComments(Course course)
         {
-            var comment = _appDbContext.Courses.Where(c => c.Id == course.Id)?.SelectMany(c => c.Comments).ToList();
+            var comment = await _appDbContext.Courses.Where(c => c.Id == course.Id)?.SelectMany(c => c.Comments).ToListAsync();
             return comment.AsReadOnly();
         }
 
-        public IEnumerable<Course> GetFavoriteCourses()
+        public async Task<IEnumerable<Course>> GetFavoriteCourses()
         {
-            return _appDbContext.Courses.Where(x => x.IsFavorite == true).ToList();
+            return await _appDbContext.Courses.Where(x => x.IsFavorite == true).ToListAsync();
         }
 
         //получить все избранные курсы
-        public IEnumerable<Course> AllCourseIsFavorite()
+        public async Task<IEnumerable<Course>> AllCourseIsFavorite()
         {
-            return _appDbContext.Courses.Where(x => x.IsFavorite == true).ToList();
+            return await _appDbContext.Courses.Where(x => x.IsFavorite == true).ToListAsync();
         }
 
         // получить все модули курса
-        public IEnumerable<Module> AllThemsPost(Guid idCourse)
+        public async Task<IEnumerable<Module>> AllThemsPost(Guid idCourse)
         {
-            return _appDbContext.Modules.Where(x => x.CourseId == idCourse).ToList();
+            return await _appDbContext.Modules.Where(x => x.CourseId == idCourse).ToListAsync();
         }
 
     }

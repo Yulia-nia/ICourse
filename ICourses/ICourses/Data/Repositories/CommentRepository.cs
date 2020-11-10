@@ -1,5 +1,6 @@
 ﻿using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,44 +10,44 @@ namespace ICourses.Data.Repositories
 {
     public class CommentRepository : IComment
     {
-        private readonly AppDbContext _appDbContext;
-        public CommentRepository(AppDbContext appDbContext)
+        private readonly CourseDbContext _appDbContext;
+        public CommentRepository(CourseDbContext appDbContext)
         {
             this._appDbContext = appDbContext;
         }
         
-        public void AddComment(Comment comment)
+        public async Task AddComment(Comment comment)
         {
-            _appDbContext.Comments.Add(comment);
-            _appDbContext.SaveChanges();
+           await _appDbContext.Comments.AddAsync(comment);
+           await  _appDbContext.SaveChangesAsync();
         }
 
-        public void DeleteComment(Comment comment)
+        public async Task DeleteComment(Comment comment)
         {
             _appDbContext.Comments.Remove(comment);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
-        public void DeleteCommentById(Guid id)
+        public async Task DeleteCommentById(Guid id)
         {
             var comment = _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefault();
             _appDbContext.Comments.Remove(comment);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Comment> GetAllComments()
+        public async Task<IEnumerable<Comment>> GetAllComments()
         {
-            return _appDbContext.Comments.ToList();
+            return await _appDbContext.Comments.ToListAsync();
         }
 
-        public Comment GetComment(Guid id)
+        public async Task<Comment> GetComment(Guid id)
         {
-            return _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefault();
+            return await _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateComment(Comment comment)
+        public async Task UpdateComment(Comment comment)
         {
             _appDbContext.Comments.Update(comment);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
         }
 
     }
