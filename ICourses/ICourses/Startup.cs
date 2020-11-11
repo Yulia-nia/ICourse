@@ -46,7 +46,6 @@ namespace ICourses
             services.AddTransient<IModule, ModuleRepository>();
             services.AddTransient<ILike, LikeRepository>();
             services.AddTransient<IComment, CommentRepository>();
-            services.AddTransient<IPodcast, PodcastRepository>();
 
             services.AddTransient<ITextMaterial, TextRepository>();
             services.AddTransient<IVideo, VideoRepository>();

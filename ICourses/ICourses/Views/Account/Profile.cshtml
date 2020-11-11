@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-6 details">
             <blockquote>
-                <
+                
 
                 </h5>
                 <small><cite title="Source Title">@Model.Email <i class="icon-map-marker"></i></cite></small>
@@ -23,14 +23,15 @@
                     <td>@Model.Year</td>
                 </tr>
               
-              
                 <tr>
                 </tr>
                 <tr>
                     <td>
                         <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
-                            <a class="btn btn-sm btn-primary"  asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">Редактировать профиль</a>
-                            <a class="btn btn-sm btn-primary"  asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">Сменить пароль</a>
+                            <div class="works-buttons filter-buttons button-group filters-button-group">
+                                <a class="button active" asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">Редактировать профиль</a>
+                                <a class="button" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">Сменить пароль</a>                             
+                            </div>
                         </form>
                     </td>
                 </tr>

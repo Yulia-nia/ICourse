@@ -4,107 +4,58 @@
     ViewData["Title"] = "Index";
 }
 
-<!--передача представлений-->
-<div class="container p-3">
-    <h1>@Model.Name</h1>
 
-    <div class="container p-3">
-        <h6>@Model.Description</h6>
-    </div>
+
+<div class="container p-3 text-center">
+    <h1 class="text-success">@Model.Name</h1>
+    <h6 class="m-3 text-muted">@Model.Description</h6>
 </div>
 
 
-<section class="second" id="about">
-    <div class="container">
-        <div class="about">
-            <div class="title">
-                <h3>About our development agency</h3>
-            </div>
-            <div class="about-content">
-                <div class="about-cards">
-
-                    @if (Model.Courses != null)
-                    {
-                        @foreach (var item in Model.Courses)
-                        {
-                            <div class="about-card revealator-slideleft revealator-delay3" id="webdesign">
-
-
-                                <div class="about-card-title">
-                                    <img  src="data:image/jpeg;base64,@(Convert.ToBase64String(@item.Image))" alt="Spacein Web Design">
-
-                                    <div class="card-title-text">
-                                        <h4>@item.Name</h4>                                        
-                                        <span>@item.Modified</span>
-                                    </div>
-                                </div>
-                                <div class="about-card-text">
-                                    <p>@item.Description</p>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="my-3 p-3 alert-info rounded shadow-sm">
-    <div class="row">
-        @if (Model.Courses != null)
+<div class="row mb-2">
+    @if (Model.Courses != null)
+    {
+        @foreach (var item in Model.Courses)
         {
-            @foreach (var item in Model.Courses)
-            {
-                <div class="col-md-6">
-                    <div class="row no-gutters border rounded bg-white  flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                        <div class="col p-4 d-flex flex-column position-static">
-                            <img style="height:300px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(@item.Image))" alt="" class="card-img" />
-                            <h3 class="mb-0">@item.Name</h3>
-                            <p class="mb-0">@item.AuthorId</p>
-
-                            <div class="mb-1 text-muted">@item.Modified</div>
-                            <div class="mb-1 text-muted">Язык:  @item.Language</div>
-
-                            <div style="height: 80px">
-                                <textarea cols="60" rows="2" class="card-text mb-auto">@item.Description</textarea>
-                            </div>
-                            <!--переход на курс-->
-                            <p>
-                                <a class="btn btn-secondary" asp-controller="Courses" asp-action="Details" asp-route-id="@item.Id" role="button">
-                                    Начать изучение &raquo;
-                                </a>
-                            </p>
-
-                            @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
-                            {
-
-                                <!--редактирование и удаление-->
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a class="btn btn-sm btn-outline-secondary" role="button" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Id">
-                                            Редактировать
-                                        </a>
-                                        <form asp-controller="Courses" asp-action="Delete" asp-route-id="@item.Id" method="post">
-
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                Удалить
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                            }
-                        </div>
+            <div class="col-md-6">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <h5 class="mb-0 text-white ">@item.Name</h5>
+                        <div class="mb-1 text-muted">@item.Modified</div>
+                        <div class="mb-1 text-muted">Язык:  @item.Language</div>
+                        <p class="card-text mb-auto text-white">@item.Description</p>
+                        <a class="button-active" asp-controller="Courses" asp-action="Details" asp-route-id="@item.Id" role="button">
+                            Начать изучение
+                        </a>
                     </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <img style='width:200px; height:200px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(@item.Image))" />
+                    </div>
+                    @if (User.IsInRole("admin") || User.IsInRole("moderator") || User.IsInRole("teacher"))
+                    {
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-secondary" role="button" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Id">
+                                    Редактировать
+                                </a>
+                                <form asp-controller="Courses" asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Удалить
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                     }
                 </div>
-            }
-        }
-    </div>
+            </div>
+         }
+     }
 </div>
+
+
 @if (User.IsInRole("admin") || User.IsInRole("teacher"))
 {
     <p>
-        <a asp-controller="Courses" asp-action="Create" asp-route-id="@Model.Id">Добавить новый курс</a>
+        <a class="button-active" asp-controller="Courses" asp-action="Create" asp-route-id="@Model.Id">Добавить новый курс</a>
     </p>
 }

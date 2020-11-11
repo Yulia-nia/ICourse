@@ -1,0 +1,28 @@
+﻿@model ICourses.Data.Models.Course
+
+<h3><a name="comments">Комментарии</a></h3>
+<div class="container">
+
+    @if (ViewBag.Comments != null)
+    {
+        <p class="text-white">Лист все коментов</p>
+        @foreach (var item in @ViewBag.Comments)
+        {
+            <h2>@item.Title</h2>
+            <p>@item.User.Email</p>
+            <p>@item.Text</p>
+
+            @if (User.IsInRole("admin") || User.IsInRole("moderator"))
+            {
+                <form asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id" method="post">
+
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            }
+
+
+        }
+    }
+</div>

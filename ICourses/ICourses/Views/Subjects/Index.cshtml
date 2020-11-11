@@ -9,15 +9,17 @@
     <div class="container">
         <div class="team">
             <div class="why-text text-white text-md-center">
-                <h3>Списки предметов</h3>
-            </div>
-            <div class="team-content">
-                <div class="team-cards">
-                    @foreach (var m in Model)
-                    {
-                        <div class="team-card revealator-slideleft revealator-delay1">
-                            <div class="team-card-text">
-                                
+                
+                    <h3 class="text-success">Списки предметов</h3>
+                 
+                </div>
+                <div class="team-content">
+                    <div class="team-cards">
+                        @foreach (var m in Model)
+                        {
+                            <div class="team-card revealator-slideleft revealator-delay1">
+                                <div class="team-card-text">
+
                                     <h2 class="text-lg-center">@Html.DisplayFor(modelItem => m.Name)</h2>
                                     <div class="team-card-links">
                                         <p>@Html.DisplayFor(modelItem => m.Description)</p>
@@ -27,23 +29,23 @@
                                             Просмотреть курсы
                                         </a>
                                     </div>
-                              
+
+                                </div>
                             </div>
-                        </div>
-                     }
+                        }
+                    </div>
                 </div>
+
+
+                @if (User.IsInRole("admin") || User.IsInRole("moderator"))
+                {
+                    <p>
+                        <a class="button-active revealator-slideup revealator-delay3 nav" asp-action="Create">
+                            Создать новый курс
+                        </a>
+                    </p>
+                }
             </div>
-
-
-            @if (User.IsInRole("admin") || User.IsInRole("moderator"))
-            {
-                <p>
-                    <a class="button-active revealator-slideup revealator-delay3 nav" asp-action="Create">
-                        Создать новый курс
-                    </a>
-                </p>
-            }
-        </div>
 </section>
 
 

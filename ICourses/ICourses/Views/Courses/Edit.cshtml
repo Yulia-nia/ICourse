@@ -4,55 +4,53 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<section class="eight">
+    <div class="container">
+        <div class="contacts">
+            <div class="why-text text-white">
+                <h3>Изменить предмет: @Model.Name</h3>
+            </div>
+            <hr />
+            <div class="contacts-content">
+                <form asp-controller="Courses" asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
 
-<h4>Course</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label text-white"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label  text-white"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Language" class="control-label  text-white"></label>
+                        <input asp-for="Language" class="form-control" />
+                        <span asp-validation-for="Language" class="text-danger"></span>
+                    </div>
+
+                    <label class="control-label text-white">Картинка</label>
+                    <input name="Image" type="file" class="form-control" />
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary button submit" />
+                    </div>
+                </form>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Modified" class="control-label"></label>
-                <input asp-for="Modified" class="form-control" />
-                <span asp-validation-for="Modified" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Language" class="control-label"></label>
-                <input asp-for="Language" class="form-control" />
-                <span asp-validation-for="Language" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsFavorite" /> @Html.DisplayNameFor(model => model.IsFavorite)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubjectId" class="control-label"></label>
-                <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
-                <span asp-validation-for="SubjectId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
     </div>
-</div>
+</section>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

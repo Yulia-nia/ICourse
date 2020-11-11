@@ -4,102 +4,95 @@
     ViewData["Title"] = "Index";
 }
 
-@if (User.IsInRole("admin") || User.IsInRole("teacher"))
-{
-    <p>
-        <a asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">Добавить новый модуль</a>
-    </p>
-}
 
-<div>@Model.Description</div>
+<hr class="featurette-divider">
 
+<div class="row featurette">
 
-@*@if (@Model.Modules != null)
-{
+    <div class="col-md-7">
+        <div class="text-center">
+            <h1 class="featurette-heading text-success m-3 ">@Model.Name</h1>
+        </div>
+        <h6 class="text-muted m-1">@Model.Modified</h6>
+        <h6 class="text-muted m-1">Язык: @Model.Language</h6>
+        <h6 class="text-muted m-1">Автор: @Model.Author.Email</h6>
+        <p class="lead text-white m-1">Описание: @Model.Description</p>
 
-    @foreach (var item in @Model.Modules)
+        @*<a label id="LIKEpost" asp-route-id="@Model.Id">LIKE</a>
+            <label id="likePost" asp-for="LikePost">@Model.LikePost</label>
+            <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+            <script type="text/javascript">
+
+                                     if (LIKEpost) {
+                                          $.ajax({
+                                               type = 'POST',
+                                               url: '@Url.Action("Like", "Publication")',
+                                               data: {
+                                                   id: @Model.Id
+                                               },
+                                               dataType: "text",
+                                               success: function (msg) {
+                                                    let likePost = getElementById('likePost');
+                                                    likePost++;
+                                                    location.reload(likePost);
+                                                    console.log(msg);
+                                               },
+                                               error: function (req, status, error) {
+                                                    console.log(msg);
+                                               }
+                                          });
+                                     }
+            </script>*@
+
+        <hr />
+        <a class="nav-link active text-success" href="#comments">Перейти к коментариям</a>
+    </div>
+
+    <div class="col-md-5">
+        <img style='width:500px; height:500px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(@Model.Image))" />
+    </div>
+</div>
+
+<div class="team-content">
+
+    @if (User.IsInRole("admin") || User.IsInRole("teacher"))
     {
-        <section class="foutrh">
-            <div class="container-fluid-bg">
-                <div class="start">
-                    <div class="title">
-                        <h3>LET'S GET STARTED TODAY</h3>
-                    </div>
-                    <div class="start-content">
-                        <div class="start-text">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus rerum non a obcaecati mollitia iure, laboriosam molestiae et. Aspernatur, ea!</p>
-                            <a class="button-active" href="#">Get Started</a>
+        <p>
+            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">Добавить новый модуль</a>
+        </p>
+    }
+</div>
+
+<div class="row">
+    @if (@Model.Modules != null)
+    {
+        @foreach (var item in @Model.Modules)
+        {
+            <div class="col-md-4">
+                <div class="mb-4 shadow-sm no-gutters border rounded overflow-hidden flex-md-row mb-4  position-relative">
+
+                    <img style='width:100%; height:225px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(@item.Image))" />
+                    <div class="card-body">
+                        <h6 class="text-white text-center m-1">@item.Name</h6>
+                        <p class="text-muted m-1">@item.Modified</p>
+                        <p class="card-text text-white m-1"> @item.Description</p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="button-active" asp-controller="Modules" asp-action="Details" asp-route-id="@item.Id" role="button">
+                                Просмотреть модуль
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
         }
-    }*@
+    }
+</div>
 
 
 
+<a class="button-active revealator-slideup revealator-delay3 nav" asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
 
-
-        <table class="table">
-            <tbody>
-                @if (@Model.Modules != null)
-                {
-
-                    @foreach (var item in @Model.Modules)
-                    {
-                        <tr>
-                            <td>
-                                @item.Modified
-                            </td>
-                            <td>
-                                @item.Name
-                            </td>
-                            <td>
-                                @item.Description
-                                <img src="data:image/jpeg;base64,@(Convert.ToBase64String(@item.Image))" alt="Spacein Web Design">
-
-                            </td>
-
-                            <td>
-                                <a asp-controller="Modules" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                =
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-        <h3>Комментарии</h3>
-
-        <div class="container">
-
-            @if (ViewBag.Comments != null)
-            {
-                <p>Лист все коментов</p>
-                @foreach (var item in @ViewBag.Comments)
-                {
-                    <h2>@item.Title</h2>
-                    <p>@item.User.Email</p>
-
-                    <p>@item.Text</p>
-
-                    @if (User.IsInRole("admin") || User.IsInRole("moderator"))
-                    {
-                        <form asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id" method="post">
-
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                Удалить
-                            </button>
-                        </form>
-                    }
-
-
-                }
-            }
-        </div>
-
-        <a asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
-
+<partial name="_PartialComments.cshtml" />
 
 

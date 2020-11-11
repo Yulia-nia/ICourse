@@ -24,7 +24,6 @@ namespace ICourses.Data
         public DbSet<Module> Modules { get; set; }
         public DbSet<Video> Videos { get; set; }
         public DbSet<TextMaterial> TextMaterials {get; set;}
-        public DbSet<Podcast> Podcasts {get; set;}
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes {get; set;}
         public override DbSet<User> Users { get; set; }

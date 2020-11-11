@@ -49,8 +49,7 @@ namespace ICourses.Views
 
         public IActionResult Create()
         {
-            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            
             return View();
         }
 
@@ -72,59 +71,6 @@ namespace ICourses.Views
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
             }
-            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
-            return View(comment);
-        }
-
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comments.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
-            return View(comment);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Text,UserId,CourseId,Modified")] Comment comment)
-        {
-            if (id != comment.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentExists(comment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
-            }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", comment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", comment.UserId);
             return View(comment);
         }
 

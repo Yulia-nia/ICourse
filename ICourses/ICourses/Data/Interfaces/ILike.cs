@@ -13,6 +13,6 @@ namespace ICourses.Data.Interfaces
         Task DeleteLike(Like like);
         Task DeleteLikeById(Guid id);
         Task<Like> GetLike(Guid id);
-        Task UpdateLike(Like like);
+        //Task UpdateLike(Like like);
     }
 }

@@ -17,7 +17,6 @@ namespace ICourses.Data.Interfaces
 
         IEnumerable<TextMaterial> GetTextMaterials(Module module);
         IEnumerable<Video> GetVideos(Module module);
-        IEnumerable<Podcast> GetPodcasts(Module module);
         //IEnumerable<Comment> GetComments(Module module);
     }
 }

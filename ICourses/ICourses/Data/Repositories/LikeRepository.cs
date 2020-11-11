@@ -46,10 +46,10 @@ namespace ICourses.Data.Repositories
             return await _appDbContext.Likes.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateLike(Like like)
-        {
-            _appDbContext.Likes.Update(like);
-            await _appDbContext.SaveChangesAsync();
-        }
+        //public async Task UpdateLike(Like like)
+        //{
+        //    _appDbContext.Likes.Update(like);
+        //    await _appDbContext.SaveChangesAsync();
+        //}
     }
 }

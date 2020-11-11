@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using ICourses.ViewModel;
+using ICourses.Data.Interfaces;
 
 namespace ICourses.Controllers
 {
@@ -15,20 +17,19 @@ namespace ICourses.Controllers
     public class VideosController : Controller
     {
         private readonly CourseDbContext _context;
-
-        public VideosController(CourseDbContext context)
+        private readonly IVideo _video;
+       public VideosController(CourseDbContext context, IVideo video)
         {
+            _video = video;
             _context = context;
         }
 
-        // GET: Videos
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Videos.Include(v => v.Module);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Videos/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -48,20 +49,16 @@ namespace ICourses.Controllers
             return View(video);
         }
 
-        // GET: Videos/Create
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Videos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id,[Bind("Id,Name,Url,Moduleid")] Video video)
+        public async Task<IActionResult> Create(Guid id,[Bind("Id,Name,Url")] Video video)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +73,6 @@ namespace ICourses.Controllers
             return View(video);
         }
 
-        // GET: Videos/Edit/5
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -90,48 +86,26 @@ namespace ICourses.Controllers
             {
                 return NotFound();
             }
-            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
+            //ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
             return View(video);
         }
 
-        // POST: Videos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Url,Moduleid")] Video video)
+        public async Task<IActionResult> Edit(Guid id, ChangeVideoViewModel video)
         {
-            if (id != video.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(video);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VideoExists(video.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
-            }
-            ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
+                Video new_video = await _video.GetVideo(id);
+                new_video.Name = video.Name;
+                new_video.Url = video.Url;
+                await _video.UpdateVideo(new_video);
+                return RedirectToAction("Details", "Modules", new { id = new_video.Moduleid });                
+            }            
             return View(video);
         }
 
-        // GET: Videos/Delete/5
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -151,7 +125,6 @@ namespace ICourses.Controllers
             return View(video);
         }
 
-        // POST: Videos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]

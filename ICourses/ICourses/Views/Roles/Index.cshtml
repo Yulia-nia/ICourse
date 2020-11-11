@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
 
-<h2>Список ролей</h2>
+<h2 class="text-white">Список ролей</h2>
 
 <table class="table">
     @foreach (var role in Model)
     {
         <tr>
-            <td>@role.Name</td>
-            @if (User.IsInRole("admin"))
+            <td class="text-white">@role.Name</td>
+            @if ((User.IsInRole("admin")) || (User.IsInRole("moderator")))
             {
                 <td>
                     <form asp-action="Delete" asp-route-id="@role.Id" method="post">

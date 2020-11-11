@@ -74,19 +74,15 @@ namespace ICourses.Data.Repositories
             var videos = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.Videos).ToList();
             return videos.AsReadOnly(); ;
         }
-        public IEnumerable<Podcast> GetPodcasts(Module module)
-        {
-            var podcasts = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.Podcasts).ToList();
-            return podcasts.AsReadOnly(); ;
-        }
+    
+
+
 
         //public IEnumerable<Comment> GetComments(Module module)
         //{
         //    var comment = _appDbContext.Modules.Where(c => c.Id == module.Id)?.SelectMany(c => c.Comments).ToList();
         //    return comment.AsReadOnly();
         //}
-
-
 
         /*public void AddComment(string userId, Comment comment)
         {

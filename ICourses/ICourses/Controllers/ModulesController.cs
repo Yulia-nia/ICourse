@@ -114,45 +114,38 @@ namespace ICourses.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
             return View(@module);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Modified,Name,Description,CourseId")] Module @module)
-        {
-            if (id != @module.Id)
-            {
-                return NotFound();
-            }
-
+        public async Task<IActionResult> Edit(Guid id, ChangeModuleViewModel module)
+        {         
             if (ModelState.IsValid)
             {
-                try
+
+                byte[] imageData = null;
+
+                using (var binaryReader = new BinaryReader(module.Image.OpenReadStream()))
                 {
-                    _context.Update(@module);
-                    await _context.SaveChangesAsync();
+                    imageData = binaryReader.ReadBytes((int)module.Image.Length);
                 }
-                catch (DbUpdateConcurrencyException)
+
+                Module new_module = await _module.GetModule(id);
+
+                if (new_module != null)
                 {
-                    if (!ModuleExists(@module.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    new_module.Name = module.Name;
+                    new_module.Description = module.Description;
+                    new_module.Image = imageData;
+                    await _module.UpdateModule(new_module);
+                    return RedirectToAction("Details", "Modules", new { id = id });
                 }
-                return RedirectToAction("Details", "Courses", new { id = module.CourseId });
-            }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
+            }            
             return View(@module);
         }
-
-
 
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(Guid? id)
@@ -183,8 +176,6 @@ namespace ICourses.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Courses", new { id = module.CourseId });
         }
-
-
 
         private bool ModuleExists(Guid id)
         {

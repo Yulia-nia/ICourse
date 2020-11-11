@@ -55,16 +55,16 @@ namespace ICourses.Data.Repositories
             return await _appDbContext.Courses.Where(x => x.IsFavorite == true).ToListAsync();
         }
 
-        //получить все избранные курсы
-        public async Task<IEnumerable<Course>> AllCourseIsFavorite()
-        {
-            return await _appDbContext.Courses.Where(x => x.IsFavorite == true).ToListAsync();
+        public async Task<IEnumerable<Like>> GetLikes(Guid courseId)
+        {          
+            return await _appDbContext.Likes.Where(like => like.CourseId == courseId).ToListAsync();
         }
 
-        // получить все модули курса
-        public async Task<IEnumerable<Module>> AllThemsPost(Guid idCourse)
-        {
-            return await _appDbContext.Modules.Where(x => x.CourseId == idCourse).ToListAsync();
+        public async Task RemoveLike(Guid courseId, string userId)
+        {           
+            var like = await _appDbContext.Likes.FirstOrDefaultAsync(li => li.CourseId == courseId && li.UserId == userId);
+            _appDbContext.Likes.Remove(like);
+            await _appDbContext.SaveChangesAsync();
         }
 
     }

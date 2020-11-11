@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using ICourses.Data.Interfaces;
+using ICourses.ViewModel;
 
 namespace ICourses.Controllers
 {
@@ -15,20 +17,20 @@ namespace ICourses.Controllers
     public class TextMaterialsController : Controller
     {
         private readonly CourseDbContext _context;
+        private readonly ITextMaterial _text;
 
-        public TextMaterialsController(CourseDbContext context)
+        public TextMaterialsController(CourseDbContext context, ITextMaterial text)
         {
+            _text = text;
             _context = context;
         }
 
-        // GET: TextMaterials
         public async Task<IActionResult> Index(Guid id)
         {
             var appDbContext = _context.TextMaterials.Where(t => t.Module.Id == id);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: TextMaterials/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -47,20 +49,16 @@ namespace ICourses.Controllers
             return View(textMaterial);
         }
 
-        // GET: TextMaterials/Create
         [Authorize(Roles = "admin,teacher")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TextMaterials/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
+        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Context")] TextMaterial textMaterial)
         {
            
             if (ModelState.IsValid)
@@ -76,7 +74,6 @@ namespace ICourses.Controllers
             return View(textMaterial);
         }
 
-        // GET: TextMaterials/Edit/5
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -90,48 +87,28 @@ namespace ICourses.Controllers
             {
                 return NotFound();
             }
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
+            //ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
             return View(textMaterial);
         }
 
-        // POST: TextMaterials/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Context,ModuleId")] TextMaterial textMaterial)
+        public async Task<IActionResult> Edit(Guid id, ChangeTextViewModel text)
         {
-            if (id != textMaterial.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(textMaterial);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TextMaterialExists(textMaterial.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
+                TextMaterial new_text = await _text.GetTextMaterial(id);
+
+                new_text.Name = text.Name;
+                new_text.Context = text.Context;
+
+                await _text.UpdateTextMaterial(new_text);
+                return RedirectToAction("Details", "Modules", new { id = new_text.ModuleId });
             }
-            ViewData["ModuleId"] = new SelectList(_context.Modules, "Id", "Id", textMaterial.ModuleId);
-            return View(textMaterial);
+            return View(text);
         }
 
-        // GET: TextMaterials/Delete/5
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -151,7 +128,6 @@ namespace ICourses.Controllers
             return View(textMaterial);
         }
 
-        // POST: TextMaterials/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
