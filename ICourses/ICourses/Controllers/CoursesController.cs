@@ -32,13 +32,6 @@ namespace ICourses.Controllers
             _context = context;
         }
 
-        //++
-        //public async Task<IActionResult> Index(Guid id)
-        //{
-        //    var appDbContext = _context.Courses.Where(c => c.SubjectId == id).Include(c => c.Author);
-        //    return View(await appDbContext.ToListAsync());
-        //}
-
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)

@@ -30,12 +30,6 @@ namespace ICourses.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(Guid id)
-        {
-            var appDbContext = _context.Modules.Where(_ => _.CourseId == id);
-            return View(await appDbContext.ToListAsync());
-        }
-
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -94,8 +88,7 @@ namespace ICourses.Controllers
                 };
                 await _module.AddModule(new_module);              
                 return RedirectToAction("Details", "Courses", new { id = new_module.CourseId });
-            }
-            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
+            }            
             return View(@module);
         }
 
@@ -114,7 +107,6 @@ namespace ICourses.Controllers
             {
                 return NotFound();
             }
-            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @module.CourseId);
             return View(@module);
         }
 
@@ -171,9 +163,10 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var @module = await _context.Modules.FindAsync(id);
-            _context.Modules.Remove(@module);
-            await _context.SaveChangesAsync();
+            var module = await _context.Modules.FindAsync(id);
+            await _module.DeleteModuleById(module.Id);
+            //_context.Modules.Remove(@module);
+            //await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Courses", new { id = module.CourseId });
         }
 

@@ -42,7 +42,7 @@ namespace ICourses.Data.Repositories
 
         public async Task<Subject> GetSubject(Guid id)
         {
-            return await _appDbContext.Subjects.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _appDbContext.Subjects.Where(x => x.Id == id).Include(i => i.Courses).FirstOrDefaultAsync();
         }
 
         public async Task UpdateSubject(Subject subject)
@@ -53,7 +53,7 @@ namespace ICourses.Data.Repositories
 
         public async Task<IEnumerable<Course>> GetCourses(Subject subject)
         {
-            var courses = await _appDbContext.Subjects.Where(c => c.Id == subject.Id)?.SelectMany(c => c.Courses).ToListAsync();
+            var courses = await _appDbContext.Subjects.Where(c => c.Id == subject.Id).SelectMany(c => c.Courses).ToListAsync();
             return courses.AsReadOnly(); ;
         }
 

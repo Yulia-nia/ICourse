@@ -8,38 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
 {
     public class SubjectsController : Controller
-    {
-        private readonly CourseDbContext _context;
+    {       
+        ISubjectService _subjectService;
 
-        public SubjectsController(CourseDbContext context)
+        public SubjectsController(ISubjectService subjectService)
         {
-            _context = context;
+            _subjectService = subjectService;
         }
        
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Subjects.ToListAsync());
+            return View(await _subjectService.GetAllSubject());
         }
        
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _context.Subjects.Include(i=>i.Courses)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            //ViewBag.Courses = _context.Courses
-            //   .Include(c => c.Subject)
-            //   .Include(c => c.Author)
-            //   .Where(_ => _.SubjectId == id);
-
+            var subject = await _subjectService.GetSubject(id);
 
             if (subject == null)
             {
@@ -63,9 +52,8 @@ namespace ICourses.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Subject subject)
         {
             if (ModelState.IsValid)
-            {
-                _context.Add(subject);
-                await _context.SaveChangesAsync();
+            { 
+                await _subjectService.AddSubject(subject);
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
@@ -74,12 +62,7 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _subjectService.GetSubject(id);
             if (subject == null)
             {
                 return NotFound();
@@ -121,15 +104,9 @@ namespace ICourses.Controllers
         }
 
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subject = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var subject = await _subjectService.GetSubject(id);
             if (subject == null)
             {
                 return NotFound();
@@ -143,9 +120,8 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
-            _context.Subjects.Remove(subject);
-            await _context.SaveChangesAsync();
+            var subject = await _subjectService.GetSubject(id);
+            await _subjectService.DeleteSubjectById(id);
             return RedirectToAction(nameof(Index));
         }
 

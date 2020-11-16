@@ -6,6 +6,8 @@ using ICourses.Data;
 using ICourses.Data.Interfaces;
 using ICourses.Data.Models;
 using ICourses.Data.Repositories;
+using ICourses.Services;
+using ICourses.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,7 +43,12 @@ namespace ICourses
 
             services.AddMvc();
 
+
+            // переписать на сервисы
             services.AddTransient<ISubject, SubjectRepository>();
+            services.AddTransient<ISubjectService, SubjectService>();
+
+
             services.AddTransient<ICourse, CourseRepository>();
             services.AddTransient<IModule, ModuleRepository>();
             services.AddTransient<ILike, LikeRepository>();

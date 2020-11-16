@@ -5,26 +5,29 @@
     <div class="title text-white">
         <h1 class="h2 mb-3 font-weight-normal">Вход в приложение</h1>
         </div>
-        <form method="post" asp-controller="Account" asp-action="Login"
-              asp-route-returnUrl="@Model.ReturnUrl">
-            <div asp-validation-summary="ModelOnly"></div>
-            <div>
-                <label asp-for="Email" class="control-label text-white"></label><br />
-                <input asp-for="Email" />
-                <span asp-validation-for="Email"></span>
-            </div>
-            <div>
-                <label asp-for="Password" class="control-label text-white"></label><br />
-                <input asp-for="Password" />
-                <span asp-validation-for="Password"></span>
-            </div>
-            <div>
-                <label asp-for="RememberMe" class="control-label text-white"></label><br />
-                <input asp-for="RememberMe" />
-            </div>
-            <div>
-                <input type="submit" value="Войти" class="button active" />
-            </div>
-        </form>
+    <form method="post" asp-controller="Account" asp-action="Login"
+          asp-route-returnUrl="@Model.ReturnUrl">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Email" class="control-label text-white"></label><br />
+            <input asp-for="Email" />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div>
+            <label asp-for="Password" class="control-label text-white"></label><br />
+            <input asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <label asp-for="RememberMe" class="control-label text-white"></label><br />
+            <input asp-for="RememberMe" />
+        </div>
+        <div>
+            <input type="submit" value="Войти" class="button active" />
+        </div>
+        <div>
+            <a class="text-muted" asp-controller="Account" asp-action="ForgotPassword">Забыли пароль?</a>
+        </div>
+    </form>
 
 

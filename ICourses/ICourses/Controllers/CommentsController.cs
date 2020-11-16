@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ICourses.Data;
 using ICourses.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using ICourses.Data.Interfaces;
 
 namespace ICourses.Views
 {
@@ -15,17 +16,13 @@ namespace ICourses.Views
     {
         UserManager<User> _userManager;
         private readonly CourseDbContext _context;
+        private readonly IComment _comments;
 
-        public CommentsController(CourseDbContext context, UserManager<User> userManager)
+        public CommentsController(CourseDbContext context, UserManager<User> userManager, IComment comments)
         {
+            _comments = comments;
             _userManager = userManager;
             _context = context;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var appDbContext = _context.Comments.Include(c => c.Course).Include(c => c.User);
-            return View(await appDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> Details(Guid? id)
@@ -98,8 +95,9 @@ namespace ICourses.Views
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var comment = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            await _comments.DeleteCommentById(comment.Id);
+
+           
             return RedirectToAction("Details", "Courses", new { id = comment.CourseId });
         }
 
