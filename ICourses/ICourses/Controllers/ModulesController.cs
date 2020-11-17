@@ -12,40 +12,35 @@ using Microsoft.AspNetCore.Identity;
 using ICourses.Data.Interfaces;
 using System.IO;
 using ICourses.ViewModel;
+using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
 {
     [Authorize]
     public class ModulesController : Controller
-    {
-        readonly UserManager<User> _userManager;
-        private readonly CourseDbContext _context;
-        private readonly IModule _module;
+    {       
+         IModuleService _moduleService;
+        ITextService _textService;
+        IVideoService _videoService;
+        //private readonly CourseDbContext _context;
 
-
-        public ModulesController(CourseDbContext context, UserManager<User> userManager, IModule module)
+        public ModulesController(IModuleService moduleService, IVideoService videoService, ITextService textService)
         {
-            _module = module;
-            _userManager = userManager;
-            _context = context;
+            _videoService = videoService;
+            _textService = textService;            
+            _moduleService = moduleService;
         }
 
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var @module = await _context.Modules
-                .Include(_ => _.Course)
-                .Include(v => v.Videos)
-                .Include(t => t.TextMaterials)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            ViewBag.Texts = _context.TextMaterials.Where(_ => _.ModuleId == id).ToList();
-
-            ViewBag.Videos = _context.Videos.Where(_ => _.Moduleid == id).ToList();
+            Module module = await _moduleService.GetModule(id);
+            ViewBag.Texts = await _textService.GetAllTextMaterials(id);
+            ViewBag.Videos = await _videoService.GetAllVideos(id);
 
             if (@module == null)
             {
@@ -67,27 +62,12 @@ namespace ICourses.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
         public async Task<IActionResult> Create(Guid id, CreateModuleViewModel module)
-        {
-            byte[] imageData = null;
-
-            using (var binaryReader = new BinaryReader(module.Image.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)module.Image.Length);
-            }
-
+        {     
             if (ModelState.IsValid)
             {
-                Module new_module = new Module
-                {
-                    Id = Guid.NewGuid(),
-                    Name = module.Name,
-                    Description = module.Description,
-                    Image = imageData,
-                    Modified = DateTime.Now,
-                    CourseId = _context.Courses.FirstOrDefault(_ => _.Id == id).Id,
-                };
-                await _module.AddModule(new_module);              
-                return RedirectToAction("Details", "Courses", new { id = new_module.CourseId });
+                Module m = await _moduleService.AddModule(id, module);
+                if(m != null)
+                    return RedirectToAction("Details", "Courses", new { id = m.CourseId });
             }            
             return View(@module);
         }
@@ -95,14 +75,14 @@ namespace ICourses.Controllers
 
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var @module = await _context.Modules.FindAsync(id);
+            var @module = await _moduleService.GetModule(id);
             if (@module == null)
             {
                 return NotFound();
@@ -116,40 +96,25 @@ namespace ICourses.Controllers
         public async Task<IActionResult> Edit(Guid id, ChangeModuleViewModel module)
         {         
             if (ModelState.IsValid)
-            {
+            {             
+                Module new_module = await _moduleService.EditModule(id, module);
 
-                byte[] imageData = null;
-
-                using (var binaryReader = new BinaryReader(module.Image.OpenReadStream()))
-                {
-                    imageData = binaryReader.ReadBytes((int)module.Image.Length);
-                }
-
-                Module new_module = await _module.GetModule(id);
-
-                if (new_module != null)
-                {
-                    new_module.Name = module.Name;
-                    new_module.Description = module.Description;
-                    new_module.Image = imageData;
-                    await _module.UpdateModule(new_module);
-                    return RedirectToAction("Details", "Modules", new { id = id });
-                }
+                if(new_module != null)
+                    return RedirectToAction("Details", "Modules", new { id = id });                
             }            
             return View(@module);
         }
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var @module = await _context.Modules
-                .Include(_ => _.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var @module = await _moduleService.GetModule(id); 
+
             if (@module == null)
             {
                 return NotFound();
@@ -163,16 +128,9 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var module = await _context.Modules.FindAsync(id);
-            await _module.DeleteModuleById(module.Id);
-            //_context.Modules.Remove(@module);
-            //await _context.SaveChangesAsync();
+            var module = await _moduleService.GetModule(id);
+            await _moduleService.DeleteModuleById(id);
             return RedirectToAction("Details", "Courses", new { id = module.CourseId });
-        }
-
-        private bool ModuleExists(Guid id)
-        {
-            return _context.Modules.Any(e => e.Id == id);
         }
     }
 }

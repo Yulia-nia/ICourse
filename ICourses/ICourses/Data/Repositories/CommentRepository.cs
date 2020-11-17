@@ -22,6 +22,14 @@ namespace ICourses.Data.Repositories
            await  _appDbContext.SaveChangesAsync();
         }
 
+
+        public async Task<IEnumerable<Comment>> GetAllComments(Guid id)
+        {
+            var post = await _appDbContext.Comments.Where(_ => _.CourseId == id).Include(c => c.Course)
+                .Include(c => c.User).ToListAsync();
+            return post;
+        }
+
         public async Task DeleteComment(Comment comment)
         {
             _appDbContext.Comments.Remove(comment);
@@ -34,14 +42,11 @@ namespace ICourses.Data.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Comment>> GetAllComments()
-        {
-            return await _appDbContext.Comments.ToListAsync();
-        }
-
+       
         public async Task<Comment> GetComment(Guid id)
         {
-            return await _appDbContext.Comments.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _appDbContext.Comments.Where(x => x.Id == id).Include(c => c.Course)
+                .Include(c => c.User).FirstOrDefaultAsync();
         }
 
         public async Task UpdateComment(Comment comment)

@@ -10,36 +10,37 @@ using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using ICourses.ViewModel;
 using ICourses.Data.Interfaces;
+using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
 {
     [Authorize]
     public class VideosController : Controller
     {
-        private readonly CourseDbContext _context;
-        private readonly IVideo _video;
-       public VideosController(CourseDbContext context, IVideo video)
+        //private readonly CourseDbContext _context;
+        //private readonly IVideo _video;
+        IVideoService _videService;
+       public VideosController(/*CourseDbContext context*/ IVideoService videoService)///, IVideo video)
         {
-            _video = video;
-            _context = context;
+            //_video = video;
+            _videService = videoService;
+           // _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var appDbContext = _context.Videos.Include(v => v.Module);
-            return View(await appDbContext.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    //var appDbContext = _context.Videos.Include(v => v.Module);
+        //    return View(await _videService.GetAllVideos());
+        //}
 
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var video = await _context.Videos
-                .Include(v => v.Module)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var video = await _videService.GetVideo(id);
 
             if (video == null)
             {
@@ -58,65 +59,58 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id,[Bind("Id,Name,Url")] Video video)
+        public async Task<IActionResult> Create(Guid id, VideoViewModel video)//[Bind("Id,Name,Url")] Video video)
         {
             if (ModelState.IsValid)
             {
-                video.Id = Guid.NewGuid();
-                video.Moduleid = _context.Modules.FirstOrDefault(_ => _.Id == id).Id;
+                Video new_video = await _videService.AddVideo(id, video);
 
-                _context.Add(video);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
+                if(new_video != null)
+                    return RedirectToAction("Details", "Modules", new { id = new_video.Moduleid });
             }
            
             return View(video);
         }
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var video = await _context.Videos.FindAsync(id);
+            var video = await _videService.GetVideo(id);
             if (video == null)
             {
                 return NotFound();
             }
-            //ViewData["Moduleid"] = new SelectList(_context.Modules, "Id", "Id", video.Moduleid);
             return View(video);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid id, ChangeVideoViewModel video)
+        public async Task<IActionResult> Edit(Guid id, VideoViewModel video)
         {
             if (ModelState.IsValid)
             {
-                Video new_video = await _video.GetVideo(id);
-                new_video.Name = video.Name;
-                new_video.Url = video.Url;
-                await _video.UpdateVideo(new_video);
-                return RedirectToAction("Details", "Modules", new { id = new_video.Moduleid });                
+                Video v = await _videService.EditVideo(id, video);
+                if(v != null)
+                    return RedirectToAction("Details", "Modules", new { id = v.Moduleid });                
             }            
             return View(video);
         }
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var video = await _context.Videos
-                .Include(v => v.Module)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var video = await _videService.GetVideo(id);
             if (video == null)
             {
                 return NotFound();
@@ -129,16 +123,12 @@ namespace ICourses.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var video = await _context.Videos.FindAsync(id);
-            _context.Videos.Remove(video);
-            await _context.SaveChangesAsync();
+        {    
+            var video = await _videService.GetVideo(id);              
+            await _videService.DeleteVideoById(id);           
             return RedirectToAction("Details", "Modules", new { id = video.Moduleid });
         }
 
-        private bool VideoExists(Guid id)
-        {
-            return _context.Videos.Any(e => e.Id == id);
-        }
+       
     }
 }

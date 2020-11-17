@@ -10,37 +10,29 @@ using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using ICourses.Data.Interfaces;
 using ICourses.ViewModel;
+using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
 {
     [Authorize]
     public class TextMaterialsController : Controller
     {
-        private readonly CourseDbContext _context;
-        private readonly ITextMaterial _text;
+        ITextService _textService;
 
-        public TextMaterialsController(CourseDbContext context, ITextMaterial text)
+        public TextMaterialsController(ITextService textService)
         {
-            _text = text;
-            _context = context;
+            _textService = textService;
         }
 
-        public async Task<IActionResult> Index(Guid id)
-        {
-            var appDbContext = _context.TextMaterials.Where(t => t.Module.Id == id);
-            return View(await appDbContext.ToListAsync());
-        }
-
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var textMaterial = await _context.TextMaterials
-                .Include(t => t.Module)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var textMaterial = await _textService.GetTextMaterial(id);
+
             if (textMaterial == null)
             {
                 return NotFound();
@@ -58,31 +50,26 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,teacher")]
-        public async Task<IActionResult> Create(Guid id, [Bind("Id,Name,Context")] TextMaterial textMaterial)
-        {
-           
+        public async Task<IActionResult> Create(Guid id, TextViewModel text)
+        {           
             if (ModelState.IsValid)
             {
-                textMaterial.Id = Guid.NewGuid();
-                textMaterial.ModuleId = _context.Modules.FirstOrDefault(_ => _.Id == id).Id;
-
-                _context.Add(textMaterial);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
+                TextMaterial textMaterial = await _textService.AddTextMaterial(id, text);    
+                if(textMaterial != null)      
+                    return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
             }
-
-            return View(textMaterial);
+            return View(text);
         }
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var textMaterial = await _context.TextMaterials.FindAsync(id);
+            var textMaterial = await _textService.GetTextMaterial(id);;
             if (textMaterial == null)
             {
                 return NotFound();
@@ -94,32 +81,27 @@ namespace ICourses.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Edit(Guid id, ChangeTextViewModel text)
+        public async Task<IActionResult> Edit(Guid id, TextViewModel text)
         {
             if (ModelState.IsValid)
             {
-                TextMaterial new_text = await _text.GetTextMaterial(id);
-
-                new_text.Name = text.Name;
-                new_text.Context = text.Context;
-
-                await _text.UpdateTextMaterial(new_text);
-                return RedirectToAction("Details", "Modules", new { id = new_text.ModuleId });
+                TextMaterial new_text = await _textService.EditTextMaterial(id, text);
+                if (new_text != null)
+                    return RedirectToAction("Details", "Modules", new { id = new_text.ModuleId });
             }
             return View(text);
         }
 
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var textMaterial = await _context.TextMaterials
-                .Include(t => t.Module)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var textMaterial = await _textService.GetTextMaterial(id);
+                
             if (textMaterial == null)
             {
                 return NotFound();
@@ -133,15 +115,9 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var textMaterial = await _context.TextMaterials.FindAsync(id);
-            _context.TextMaterials.Remove(textMaterial);
-            await _context.SaveChangesAsync();
+            var textMaterial = await _textService.GetTextMaterial(id);
+            await _textService.DeleteTextMaterialById(id);
             return RedirectToAction("Details", "Modules", new { id = textMaterial.ModuleId });
-        }
-
-        private bool TextMaterialExists(Guid id)
-        {
-            return _context.TextMaterials.Any(e => e.Id == id);
         }
     }
 }

@@ -32,18 +32,7 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CourseDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<CourseDbContext>()
-                .AddDefaultTokenProviders();
-
             services.AddControllersWithViews();
-
-
-            services.AddMvc();
-
 
             // переписать на сервисы
             services.AddTransient<ISubject, SubjectRepository>();
@@ -53,15 +42,30 @@ namespace ICourses
             services.AddTransient<ICourseService, CourseService>();
 
             services.AddTransient<IModule, ModuleRepository>();
-
-
-            services.AddTransient<ILike, LikeRepository>();
-            services.AddTransient<IComment, CommentRepository>();
+            services.AddTransient<IModuleService, ModuleService>();
 
             services.AddTransient<ITextMaterial, TextRepository>();
-            services.AddTransient<IVideo, VideoRepository>();
+            services.AddTransient<ITextService, TextService>();
 
-            services.AddControllersWithViews();
+            services.AddTransient<IVideo, VideoRepository>();
+            services.AddTransient<IVideoService, VideoService>();
+            
+            services.AddTransient<ILike, LikeRepository>();
+            //
+
+            services.AddTransient<IComment, CommentRepository>();
+            services.AddTransient<ICommentService, CommentService>();
+
+
+            services.AddDbContext<CourseDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<CourseDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddMvc();          
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

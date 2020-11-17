@@ -12,8 +12,8 @@ namespace ICourses.Services
 {
     public class CourseService : ICourseService
     {
-        ICourse _coursesRepository;
-        ISubjectService _subjectService;
+        private readonly ICourse _coursesRepository;
+        private readonly ISubjectService _subjectService;
         public CourseService(ICourse coursesRepository, ISubjectService subjectService)
         {
             _subjectService = subjectService;
@@ -63,14 +63,7 @@ namespace ICourses.Services
         {
             await _coursesRepository.UpdateCourse(course);
         }
-
-
-        //public Task<IEnumerable<Course>> GetallCourses()
-        //{
-        //    throw new notimplementedexception();
-        //}
-
-
+        
         //-
         public async Task<IEnumerable<Course>> GetFavoriteCourses()
         {

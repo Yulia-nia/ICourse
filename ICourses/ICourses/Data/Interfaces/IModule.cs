@@ -15,8 +15,7 @@ namespace ICourses.Data.Interfaces
         Task<Module> GetModule(Guid id);
         Task UpdateModule(Module module);
 
-        IEnumerable<TextMaterial> GetTextMaterials(Module module);
-        IEnumerable<Video> GetVideos(Module module);
+       
         //IEnumerable<Comment> GetComments(Module module);
     }
 }

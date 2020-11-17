@@ -9,7 +9,7 @@ namespace ICourses.Data.Interfaces
     public interface IComment
     {
         Task AddComment(Comment comment);
-        Task<IEnumerable<Comment>> GetAllComments();
+        Task<IEnumerable<Comment>> GetAllComments(Guid id);
         Task DeleteComment(Comment comment);
         Task DeleteCommentById(Guid id);
         Task<Comment> GetComment(Guid id);

@@ -21,16 +21,15 @@ namespace ICourses.Controllers
     public class CoursesController : Controller
     {
         UserManager<User> _userManager;
-        private readonly CourseDbContext _context;
+        //private readonly CourseDbContext _context;
         //private readonly ICourse _course;
+        private readonly ICommentService _commentService;
 
         private readonly ICourseService _courseService;
-
         private readonly ILike _like;
-        public CoursesController(ICourseService courseService, UserManager<User> userManager,ILike like, CourseDbContext context)
+        public CoursesController(ICourseService courseService, UserManager<User> userManager,ILike like, ICommentService commentService)
         {
-            _context = context;
-
+            _commentService = commentService;
             _like = like;
             _courseService = courseService;
             _userManager = userManager;     
@@ -44,8 +43,7 @@ namespace ICourses.Controllers
             }
 
             var course = await _courseService.GetCourse(id);
-
-            ViewBag.Comments = _context.Comments.Include(c => c.Course).Include(c => c.User).Where(_ => _.CourseId == id);
+            ViewBag.Comments = await _commentService.GetAllComments(id);
 
             if (course == null)
             {

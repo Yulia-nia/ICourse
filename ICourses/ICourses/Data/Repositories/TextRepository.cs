@@ -35,14 +35,16 @@ namespace ICourses.Data.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TextMaterial>> GetAllTextMaterials()
+        //получаем айди модуля и выводим все его материалы
+        public async Task<IEnumerable<TextMaterial>> GetAllTextMaterials(Guid moduleId)
         {
-            return await _appDbContext.TextMaterials.ToListAsync();
+            var module = await _appDbContext.Modules.Where(_ => _.Id == moduleId).FirstOrDefaultAsync();
+            return module.TextMaterials.ToList();
         }
 
         public async Task<TextMaterial> GetTextMaterial(Guid id)
         {
-            return await _appDbContext.TextMaterials.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _appDbContext.TextMaterials.Where(x => x.Id == id).Include(t => t.Module).FirstOrDefaultAsync();
         }
 
         public async Task UpdateTextMaterial(TextMaterial text)

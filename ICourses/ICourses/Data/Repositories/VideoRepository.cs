@@ -36,14 +36,15 @@ namespace ICourses.Data.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Video>> GetAllVideos()
+        public async Task<IEnumerable<Video>> GetAllVideos(Guid id)
         {
-            return await _appDbContext.Videos.ToListAsync();
+            var module = await _appDbContext.Modules.Where(_ => _.Id == id).FirstOrDefaultAsync();
+            return module.Videos.ToList();
         }
 
         public async Task<Video> GetVideo(Guid id)
         {
-            return await _appDbContext.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _appDbContext.Videos.Where(x => x.Id == id).Include(v => v.Module).FirstOrDefaultAsync();
         }
 
         public async Task UpdateVideo(Video video)

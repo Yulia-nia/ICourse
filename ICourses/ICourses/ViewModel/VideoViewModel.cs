@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ICourses.ViewModel
 {
-    public class ChangeTextViewModel
+    public class VideoViewModel
     {
         public string Name { get; set; }
-        public string Context { get; set; }
+        public string Url { get; set; }
     }
 }

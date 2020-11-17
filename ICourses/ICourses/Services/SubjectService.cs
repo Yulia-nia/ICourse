@@ -11,7 +11,7 @@ namespace ICourses.Services
 {
     public class SubjectService : ISubjectService
     {
-        ISubject _subjectRepository;
+        private readonly ISubject _subjectRepository;
 
         public SubjectService(ISubject subjectRepository)
         {
@@ -22,11 +22,6 @@ namespace ICourses.Services
         {
 
             await _subjectRepository.AddSubject(subject);
-        }
-
-        public async Task DeleteSubject(Subject subject)
-        {
-            await _subjectRepository.DeleteSubject(subject);
         }
 
         public async Task DeleteSubjectById(Guid id)

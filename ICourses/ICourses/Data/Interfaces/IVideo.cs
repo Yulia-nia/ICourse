@@ -9,7 +9,7 @@ namespace ICourses.Data.Interfaces
     public interface IVideo
     {
         Task AddVideo(Video video);
-        Task<IEnumerable<Video>> GetAllVideos();
+        Task<IEnumerable<Video>> GetAllVideos(Guid id);
         Task DeleteVideo(Video video);
         Task DeleteVideoById(Guid id);
         Task<Video> GetVideo(Guid id);
