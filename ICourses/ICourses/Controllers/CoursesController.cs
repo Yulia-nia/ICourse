@@ -13,6 +13,7 @@ using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
 {
@@ -21,29 +22,28 @@ namespace ICourses.Controllers
     {
         UserManager<User> _userManager;
         private readonly CourseDbContext _context;
-        private readonly ICourse _course;
+        //private readonly ICourse _course;
+
+        private readonly ICourseService _courseService;
 
         private readonly ILike _like;
-        public CoursesController(CourseDbContext context, UserManager<User> userManager, ICourse course, ILike like)
+        public CoursesController(ICourseService courseService, UserManager<User> userManager,ILike like, CourseDbContext context)
         {
-            _like = like;
-            _course = course;
-            _userManager = userManager;
             _context = context;
+
+            _like = like;
+            _courseService = courseService;
+            _userManager = userManager;     
         }
 
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .Include(c => c.Subject)
-                .Include(c => c.Author)
-                .Include(c => c.Modules)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _courseService.GetCourse(id);
 
             ViewBag.Comments = _context.Comments.Include(c => c.Course).Include(c => c.User).Where(_ => _.CourseId == id);
 
@@ -67,32 +67,16 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,teacher")]
         public async Task<IActionResult> Create(Guid id, CreateCourseViewModel course)
         {
-
-            byte[] imageData = null;
-
-            using (var binaryReader = new BinaryReader(course.Image.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)course.Image.Length);
-            }
-
             string uid = _userManager.GetUserId(User);
             User user = await _userManager.FindByIdAsync(uid);
 
             if (ModelState.IsValid)
             {
-                Course new_course = new Course()
+                var result = await _courseService.AddCourse(id, course, uid);
+                if (result != null)
                 {
-                    Id = Guid.NewGuid(),
-                    Modified = DateTime.Now,
-                    Name = course.Name,
-                    Description = course.Description,
-                    Language = course.Language,
-                    Image = imageData,
-                    SubjectId = _context.Subjects.FirstOrDefault(_ => _.Id == id).Id,
-                    AuthorId = user.Id,             
-                };
-                await _course.AddCourse(new_course);
-                return RedirectToAction("Details", "Subjects", new { id = new_course.SubjectId });
+                    return RedirectToAction("Details", "Subjects", new { id = result.SubjectId });
+                }                    
             }
             return View();
         }
@@ -106,7 +90,7 @@ namespace ICourses.Controllers
                 return NotFound();
             }
 
-            Course course = await _course.GetCourse(id);
+            Course course = await _courseService.GetCourse(id);
 
             if (course == null)
             {
@@ -122,22 +106,10 @@ namespace ICourses.Controllers
         {
             if (ModelState.IsValid)
             {
-                byte[] imageData = null;
-
-                using (var binaryReader = new BinaryReader(course.Image.OpenReadStream()))
-                {
-                    imageData = binaryReader.ReadBytes((int)course.Image.Length);
-                }
-
-                Course new_course = await _course.GetCourse(id);
+                Course new_course = await _courseService.EditCourse(id, course);
 
                 if (new_course != null)
-                {
-                    new_course.Name = course.Name;
-                    new_course.Description = course.Description;
-                    new_course.Image = imageData;
-
-                    await _course.UpdateCourse(new_course);
+                {                   
                     return RedirectToAction("Details", "Subjects", new { id = new_course.SubjectId });
                 }    
             }           
@@ -146,16 +118,14 @@ namespace ICourses.Controllers
         
         
         [Authorize(Roles = "admin,moderator,teacher")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .Include(c => c.Subject)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _courseService.GetCourse(id);
             if (course == null)
             {
                 return NotFound();
@@ -168,16 +138,11 @@ namespace ICourses.Controllers
         [Authorize(Roles = "admin,moderator,teacher")]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
+            var course = await _courseService.GetCourse(id);
+            await _courseService.DeleteCourse(course);
             return RedirectToAction("Details", "Subjects", new { id = course.SubjectId });
         }
 
-        private bool CourseExists(Guid id)
-        {
-            return _context.Courses.Any(e => e.Id == id);
-        }
 
         //public async Task<IActionResult> Like(Guid id)
         //{
@@ -190,49 +155,5 @@ namespace ICourses.Controllers
           
         //}
 
-        [HttpPost]
-        [Route("addLike")]
-        public async Task<IActionResult> LikeCourse([FromForm] Guid courseId)
-        {
-            if (ModelState.IsValid && courseId != null)
-            {
-                string uid = _userManager.GetUserId(User);
-                User user = await _userManager.FindByIdAsync(uid);
-
-                if (uid != null)
-                {                   
-                    Like newLike = new Like()
-                    {
-                        Id = Guid.NewGuid(),
-                        CourseId = courseId,
-                        UserId = uid,
-                    };
-                    await _like.AddLike(newLike);
-
-                    if (newLike != null)
-                        return Ok(newLike);
-                }
-            }
-            return Unauthorized();
-        }
-
-
-        [HttpDelete]
-        [Route("removeLike")]
-        public async Task<IActionResult> RemoveLike([FromForm] Guid courseId)
-        {
-            if (ModelState.IsValid && courseId != null)
-            {
-                string uid = _userManager.GetUserId(User);
-                User user = await _userManager.FindByIdAsync(uid);
-
-                if (uid != null)
-                {
-                    await _course.RemoveLike(courseId, uid);
-                    return Ok();
-                }
-            }
-            return Unauthorized();
-        }
     }
 }

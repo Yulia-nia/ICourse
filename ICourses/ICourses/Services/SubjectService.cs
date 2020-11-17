@@ -49,5 +49,10 @@ namespace ICourses.Services
             var subject = await _subjectRepository.GetSubject(id);
             return subject;
         }
+
+        public async Task UpdateSubject(Subject subject)
+        {
+            await _subjectRepository.UpdateSubject(subject);
+        }
     }
 }

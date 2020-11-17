@@ -15,7 +15,7 @@
         </div>
         <h6 class="text-muted m-1">@Model.Modified</h6>
         <h6 class="text-muted m-1">Язык: @Model.Language</h6>
-        <h6 class="text-muted m-1">Автор: @Model.Author.Email</h6>
+        <h6 class="text-muted m-1">Автор: @Model.AuthorId</h6>
         <p class="lead text-white m-1">Описание: @Model.Description</p>
 
         @*<a label id="LIKEpost" asp-route-id="@Model.Id">LIKE</a>
@@ -91,8 +91,7 @@
 
 
 
-<a class="button-active revealator-slideup revealator-delay3 nav" asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
-
+<a name="comments" class="button-active revealator-slideup revealator-delay3 nav" asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
 <partial name="_PartialComments.cshtml" />
 
 

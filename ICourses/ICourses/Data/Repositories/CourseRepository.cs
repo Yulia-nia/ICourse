@@ -36,7 +36,7 @@ namespace ICourses.Data.Repositories
 
         public async Task<Course> GetCourse(Guid id)
         {
-            return await _appDbContext.Courses.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _appDbContext.Courses.Where(x => x.Id == id).Include(c => c.Modules).Include(c => c.Likes).FirstOrDefaultAsync();
         }
         public async Task UpdateCourse(Course course)
         {

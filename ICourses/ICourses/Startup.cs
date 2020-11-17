@@ -10,6 +10,7 @@ using ICourses.Services;
 using ICourses.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -47,10 +48,13 @@ namespace ICourses
             // переписать на сервисы
             services.AddTransient<ISubject, SubjectRepository>();
             services.AddTransient<ISubjectService, SubjectService>();
-
-
+            
             services.AddTransient<ICourse, CourseRepository>();
+            services.AddTransient<ICourseService, CourseService>();
+
             services.AddTransient<IModule, ModuleRepository>();
+
+
             services.AddTransient<ILike, LikeRepository>();
             services.AddTransient<IComment, CommentRepository>();
 
@@ -69,10 +73,19 @@ namespace ICourses
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");    //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //app.UseStatusCodePages(async context =>
+            //{
+            //    context.HttpContext.Response.ContentType = "text/plain";
+
+            //    await context.HttpContext.Response.WriteAsync(
+            //        "Status code page, status code: " +
+            //        context.HttpContext.Response.StatusCode);
+            //});
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

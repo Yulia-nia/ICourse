@@ -60,7 +60,7 @@ namespace ICourses.Controllers
         }
 
         [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             var subject = await _subjectService.GetSubject(id);
             if (subject == null)
@@ -82,22 +82,8 @@ namespace ICourses.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(subject);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SubjectExists(subject.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                
+                await _subjectService.UpdateSubject(subject);     
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
@@ -125,9 +111,9 @@ namespace ICourses.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubjectExists(Guid id)
-        {
-            return _context.Subjects.Any(e => e.Id == id);
-        }
+        //private bool SubjectExists(Guid id)
+        //{
+        //    return _context.Subjects.Any(e => e.Id == id);
+        //}
     }
 }

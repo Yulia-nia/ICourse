@@ -12,6 +12,7 @@ namespace ICourses.Services.Interfaces
         Task<IEnumerable<Subject>> GetAllSubject();
         Task DeleteSubject(Subject subject);
         Task DeleteSubjectById(Guid id);
+        Task UpdateSubject(Subject subject);
         Task<Subject> GetSubject(Guid id);
         Task<IEnumerable<Course>> GetCourses(Subject subject);
     }
