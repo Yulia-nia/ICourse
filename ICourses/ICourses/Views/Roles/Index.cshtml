@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
-<h2 class="text-white">Список ролей</h2>
+<h2 class="text-white">@localizer["listRole"]</h2>
 
 <table class="table">
     @foreach (var role in Model)
@@ -12,18 +13,18 @@
                 <td>
                     <form asp-action="Delete" asp-route-id="@role.Id" method="post">
                         <button type="submit" class="btn btn-sm btn-danger">
-                            Удалить
+                            @localizer["Delete"]
                         </button>
                     </form>
                 </td>
-}
+            }
         </tr>
-}
+    }
 </table>
 
 @if (User.IsInRole("admin"))
 {
-    <a asp-action="Create">Добавить роль</a>
+<a asp-action="Create">@localizer["AddRole"]</a>
 }
 
-<a asp-action="UserList">Список пользователей</a>
+<a asp-action="UserList">@localizer["listUser"]</a>

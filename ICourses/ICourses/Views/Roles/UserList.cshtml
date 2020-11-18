@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<ICourses.Data.Models.User>
-
-<h2 class="text-white">Список пользователей</h2>
-
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 
+
+
+<h2 class="text-white">@localizer["list"]</h2>
 <div>
 <table class="table">
     @foreach (var user in Model)
@@ -13,7 +14,7 @@
             @if ((User.IsInRole("admin")) || (User.IsInRole("moderator")))
             {
                 <td>
-                    <a class="btn btn-sm btn-primary button-active" asp-action="Edit" asp-route-userid="@user.Id">Права доступа</a>
+                    <a class="btn btn-sm btn-primary button-active" asp-action="Edit" asp-route-userid="@user.Id">@localizer["Editbtn"]</a>
                 </td>
                 <td>
                     @*<a class="btn btn-sm btn-primary" asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id">Редактировать профиль</a>
@@ -21,7 +22,7 @@
 
                     <form asp-controller="Users" asp-action="Delete" asp-route-id="@user.Id" method="post">
                         <button type="submit" class="btn btn-sm btn-danger">
-                            Удалить
+                            @localizer["Delete"]
                         </button>
                     </form>
                 </td>
@@ -35,6 +36,6 @@
 <div>
     @if ((User.IsInRole("admin")) || (User.IsInRole("moderator")))
     {
-        <a class="button-active" asp-action="Index">Список ролей</a>
+    <a class="button-active" asp-action="Index">@localizer["btnRoles"] Список ролей</a>
     }
 </div>

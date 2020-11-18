@@ -1,13 +1,15 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+
+@{
     ViewData["Title"] = "Home Page";
 }
 <section class="first">
     <div class="first-bg"></div>
     <div class="container">
         <div class="first-content">
-            <h1 class="revealator-slideup revealator-delay1">IКурсы</h1>
-            <h2 class="revealator-slideup revealator-delay2">Агентство Развития</h2>
-            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Subjects" asp-action="Index">Больше информации</a>
+            <h1 class="revealator-slideup revealator-delay1">@localizer["Title"]</h1>
+            <h2 class="revealator-slideup revealator-delay2">@localizer["Description"]</h2>
+            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Subjects" asp-action="Index">@localizer["Button"]</a>
         </div>
-        </div>
+    </div>
 </section>

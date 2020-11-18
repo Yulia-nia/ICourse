@@ -1,4 +1,5 @@
 ﻿@model ICourses.Data.Models.Course
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,7 +9,7 @@
     <div class="container">
         <div class="contacts">
             <div class="why-text text-white">
-                <h3>Изменить предмет: @Model.Name</h3>
+                <h3>@localizer["h1text"] @Model.Name</h3>
             </div>
             <hr />
             <div class="contacts-content">
@@ -17,37 +18,37 @@
                     <input type="hidden" asp-for="Id" />
 
                     <div class="form-group">
-                        <label asp-for="Name" class="control-label text-white"></label>
+                        <label asp-for="Name" class="control-label text-white">@localizer["Name"]</label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Description" class="control-label  text-white"></label>
+                        <label asp-for="Description" class="control-label  text-white">@localizer["Description"]</label>
                         <input asp-for="Description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Language" class="control-label  text-white"></label>
+                        <label asp-for="Language" class="control-label  text-white">@localizer["Language"]</label>
                         <input asp-for="Language" class="form-control" />
                         <span asp-validation-for="Language" class="text-danger"></span>
                     </div>
 
-                    <label class="control-label text-white">Картинка</label>
+                    <label class="control-label text-white">@localizer["Image"]</label>
                     <input name="Image" type="file" class="form-control" />
 
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary button submit" />
+                        <input type="submit" value="@localizer["Save"]" class="btn btn-primary button submit" />
                     </div>
                 </form>
 
             </div>
         </div>
 
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
+        @*<div>
+            <a asp-action="Index">@localizer["Back"]</a>
+        </div>*@
     </div>
 </section>
 

@@ -1,4 +1,6 @@
 ﻿@model ICourses.Data.Models.Course
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+
 
 @{
     ViewData["Title"] = "Index";
@@ -14,9 +16,9 @@
             <h1 class="featurette-heading text-success m-3 ">@Model.Name</h1>
         </div>
         <h6 class="text-muted m-1">@Model.Modified</h6>
-        <h6 class="text-muted m-1">Язык: @Model.Language</h6>
-        <h6 class="text-muted m-1">Автор: @Model.AuthorId</h6>
-        <p class="lead text-white m-1">Описание: @Model.Description</p>
+        <h6 class="text-muted m-1">@localizer["LangLable"]: @Model.Language</h6>
+        <h6 class="text-muted m-1">@localizer["Author"]: @Model.AuthorId</h6>
+        <p class="lead text-white m-1">@localizer["Description"]: @Model.Description</p>
 
         @*<a label id="LIKEpost" asp-route-id="@Model.Id">LIKE</a>
             <label id="likePost" asp-for="LikePost">@Model.LikePost</label>
@@ -45,7 +47,9 @@
             </script>*@
 
         <hr />
-        <a class="nav-link active text-success" href="#comments">Перейти к коментариям</a>
+        <a class="nav-link active text-success" href="#comments">
+            @localizer["AComm"] 
+        </a>
     </div>
 
     <div class="col-md-5">
@@ -58,7 +62,9 @@
     @if (User.IsInRole("admin") || User.IsInRole("teacher"))
     {
         <p>
-            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">Добавить новый модуль</a>
+            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">
+                @localizer["CreateModule"] 
+            </a>
         </p>
     }
 </div>
@@ -79,7 +85,7 @@
 
                         <div class="d-flex justify-content-between align-items-center">
                             <a class="button-active" asp-controller="Modules" asp-action="Details" asp-route-id="@item.Id" role="button">
-                                Просмотреть модуль
+                                @localizer["DetailModule"]
                             </a>
                         </div>
                     </div>
@@ -91,7 +97,9 @@
 
 
 
-<a name="comments" class="button-active revealator-slideup revealator-delay3 nav" asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Добавить коментарий</a>
+<a name="comments" class="button-active revealator-slideup revealator-delay3 nav" asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">
+    @localizer["AddComment"]
+</a>
 <partial name="_PartialComments.cshtml" />
 
 

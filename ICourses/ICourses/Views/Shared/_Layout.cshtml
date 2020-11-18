@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ICourses</title>
@@ -28,11 +29,14 @@
                 <div class="collapse navbar-collapse justify-content-md-end">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Главная</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">@localizer["Main"]</a>
                         </li>
 
                         <li class="active">
-                            <a class="nav-link" role="button" asp-controller="Subjects" asp-action="Index">Предметы</a>
+                            <a class="nav-link" role="button" asp-controller="Subjects" asp-action="Index">@localizer["Sub"]</a>
+                        </li>
+                        <li>
+                            @await Html.PartialAsync("_SelectLanguagePartial")
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
@@ -40,17 +44,17 @@
                             @if (User.IsInRole("admin"))
                             {
                                 <li>
-                                    <a a class="nav-link" asp-controller="Roles" asp-action="Index">Список ролей</a>
+                                    <a a class="nav-link" asp-controller="Roles" asp-action="Index">@localizer["ListRoles"]</a>
                                 </li>
                             }
                             <li>
-                                <a class="nav-link" asp-controller="Account" asp-action="Profile">Hello @User.Identity.Name</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Profile">@localizer["Hello"] @User.Identity.Name</a>
                             </li>
                             <li>
                                 <form method="post" asp-controller="Account" asp-action="Logout">
                                     <button type="submit" class="btn btn-light center-block">
                                         <span class="glyphicon glyphicon-log-out"></span>
-                                        Выход
+                                         @localizer["Logout"]
                                     </button>
                                 </form>
                             </li>
@@ -58,11 +62,11 @@
                         else
                         {
                             <li class="nav">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">Вход</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">@localizer["Login"]</a>
                             </li>
 
                             <li class="nav">
-                                <a class="nav-link" asp-controller="Account" asp-action="Register">Регистрация</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">@localizer["Registr"]</a>
                             </li>
                         }
 

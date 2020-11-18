@@ -1,45 +1,45 @@
 ﻿@model ICourses.Data.Models.Module
-
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 @{
     ViewData["Title"] = "Edit";
 }
 
 <div class="title text-white">
-    <h1 class="h2 mb-3 font-weight-normal">Изменить модуль: @Model.Name</h1>
+    <h1 class="h2 mb-3 font-weight-normal">@localizer["CreateLable"]: @Model.Name</h1>
 </div>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit"  method="post" enctype="multipart/form-data">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-           
+
             <div class="form-group">
-                <label asp-for="Name" class="control-label text-white"></label>
+                <label asp-for="Name" class="control-label text-white">@localizer["Name"]</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label text-white"></label>
+                <label asp-for="Description" class="control-label text-white">@localizer["Description"]</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-     
 
-            <label class="control-label text-white">Картинка</label>
+
+            <label class="control-label text-white">@localizer["Image"]</label>
             <input name="Image" type="file" class="form-control" />
 
             <div class="form-group">
-                <input type="submit" value="Save" class="button-active" />
+                <input type="submit" value="@localizer["Save"]" class="button-active" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+@*<div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

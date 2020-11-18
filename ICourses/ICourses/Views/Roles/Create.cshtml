@@ -1,11 +1,13 @@
 ﻿@model string
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label class="text-white" for="name">Новая роль</label>
+        <label class="text-white" for="name">@localizer["NewRole"]</label>
         <input name="name" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary button-active">Добавить</button>
+    <button type="submit" class="btn btn-primary button-active">@localizer["Add"]</button>
 </form>

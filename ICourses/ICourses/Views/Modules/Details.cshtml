@@ -1,10 +1,8 @@
 ﻿@model ICourses.Data.Models.Module
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 @{
     ViewData["Title"] = "Details";
 }
-
-
-
 
 <div class="container m-1 my-3 p-3">
     <div class="container">
@@ -14,7 +12,7 @@
                     @if (@Model.TextMaterials != null)
                     {
                         <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            <span>Текстовые материалы:</span>
+                            <span>@localizer["TextMat"]:</span>
                         </h5>
 
                         @foreach (var item in Model.TextMaterials)
@@ -33,7 +31,7 @@
                     @if (@Model.Videos != null)
                     {
                         <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            <span>Видео:</span>
+                            <span>@localizer["Videos"]:</span>
 
                         </h5>
 
@@ -64,16 +62,16 @@
                                 </div>
                                 <h6 class="text-muted">@Model.Modified</h6>
 
-                                <p class="lead text-white">Описание: @Model.Description</p>
+                                <p class="lead text-white">@localizer["ModuleDescription"]: @Model.Description</p>
 
                                 @if (User.IsInRole("admin") || User.IsInRole("moderator") || (User.IsInRole("teacher")))
                                 {
 
                                     <p>
-                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">@localizer["Editbtn"]</a>
                                         <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                                             <button type="submit" class="btn btn-sm btn-danger">
-                                                Удалить
+                                                @localizer["Deletebtn"]
                                             </button>
                                         </form>
                                     </p>
@@ -101,13 +99,13 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
                                                     <a class="btn btn-sm btn-outline-secondary" role="button" asp-controller="TextMaterials" asp-action="Edit" asp-route-id="@item.Id">
-                                                        Редактировать
+                                                        @localizer["Editbtn"]
                                                     </a>
 
                                                     <form asp-controller="TextMaterials" asp-action="Delete" asp-route-id="@item.Id" method="post">
 
                                                         <button type="submit" class="btn btn-sm btn-danger">
-                                                            Удалить
+                                                            @localizer["Deletebtn"]
                                                         </button>
                                                     </form>
                                                 </div>
@@ -123,7 +121,8 @@
                         <div class="container m-3">
                             @if (User.IsInRole("admin") || (User.IsInRole("teacher")))
                             {
-                                <p><a class="button-active revealator-slideup revealator-delay3" asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">Create New Text Material</a></p>
+                                <p><a class="button-active revealator-slideup revealator-delay3" asp-area="" asp-controller="TextMaterials" asp-action="Create" asp-route-id="@Model.Id">
+                                      @localizer["NewText"] </a></p>
                             }
                         </div>
                         <hr />
@@ -137,10 +136,10 @@
                                         <h2 class="blog-post-title text-white"><a name="@v.Id">@v.Name</a></h2>
 
                                         @*<div height="240" width="320" controls>
-                                            <video width="320" height="240" controls>
-                                                <source src=@v.Url type="video/mp4" />
-                                            </video>
-                                        </div>*@
+                                                <video width="320" height="240" controls>
+                                                    <source src=@v.Url type="video/mp4" />
+                                                </video>
+                                            </div>*@
 
                                         <video width="640" height="480" controls>
                                             <source src=@v.Url type="video/mp4">
@@ -153,13 +152,13 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
                                                     <a class="btn btn-sm btn-outline-secondary" role="button" asp-controller="Videos" asp-action="Edit" asp-route-id="@v.Id">
-                                                        Редактировать
+                                                        @localizer["Editbtn"]
                                                     </a>
 
                                                     <form asp-controller="Videos" asp-action="Delete" asp-route-id="@v.Id" method="post">
 
                                                         <button type="submit" class="btn btn-sm btn-danger">
-                                                            Удалить
+                                                            @localizer["Deletebtn"]
                                                         </button>
                                                     </form>
                                                 </div>
@@ -176,7 +175,9 @@
                             {
 
                                 <p>
-                                    <a class="button-active revealator-slideup revealator-delay3" asp-controller="Videos" asp-action="Create" asp-route-id="@Model.Id">Create New Video</a>
+                                    <a class="button-active revealator-slideup revealator-delay3" asp-controller="Videos" asp-action="Create" asp-route-id="@Model.Id">
+                                        @localizer["NewVideo"]
+                                    </a>
                                 </p>
                             }
                         </div>

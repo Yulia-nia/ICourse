@@ -1,12 +1,13 @@
 ﻿@model ICourses.Data.Models.TextMaterial
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h4>TextMaterial</h4>
+
 <div class="title text-white">
-    <h1 class="h2 mb-3 font-weight-normal">Создать новый материал</h1>
+    <h1 class="h2 mb-3 font-weight-normal">@localizer["CreateLable"]</h1>
 </div>
 <hr />
 <div class="row">
@@ -14,25 +15,25 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label text-white">Имя</label>
+                <label asp-for="Name" class="control-label text-white">@localizer["Name"]</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Context" class="control-label text-white"></label>
+                <label asp-for="Context" class="control-label text-white">@localizer["Context"] </label>
                 <textarea asp-for="Context" class="form-control"> </textarea>
                 <span asp-validation-for="Context" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="button-active" />
+                <input type="submit" value="@localizer["Create"]" class="button-active" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+@*<div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,8 +1,8 @@
 ﻿@model ICourses.Data.Models.User
-
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 @{ ViewData["Title"] = "Profile"; }
 
-<h3 class="text-center">Profile</h3>
+<h3 class="text-center">@localizer["Profile"]</h3>
 
 
 <div class="container">
@@ -11,26 +11,26 @@
         </div>
         <div class="col-md-6 details">
             <blockquote>
-                
 
-                </h5>
+
+                
                 <small><cite title="Source Title">@Model.Email <i class="icon-map-marker"></i></cite></small>
             </blockquote>
             <table>
                 <tr>
-                    <td>Год рождения:</td>
+                  
 
                     <td>@Model.Year</td>
                 </tr>
-              
+
                 <tr>
                 </tr>
                 <tr>
                     <td>
                         <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                             <div class="works-buttons filter-buttons button-group filters-button-group">
-                                <a class="button active" asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">Редактировать профиль</a>
-                                <a class="button" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">Сменить пароль</a>                             
+                                <a class="button active" asp-controller="Users" asp-action="Edit" asp-route-id="@Model.Id">@localizer["UserEdit"]</a>
+                                <a class="button" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">@localizer["UserChange"]</a>
                             </div>
                         </form>
                     </td>

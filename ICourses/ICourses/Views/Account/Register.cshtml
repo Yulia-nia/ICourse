@@ -1,52 +1,54 @@
 ﻿@model ICourses.ViewModel.RegisterViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
-    <div class="title text-white">
-        <h1 class="h2 mb-3 font-weight-normal">Регистрация нового пользователя</h1>
+
+<div class="title text-white">
+    <h1 class="h2 mb-3 font-weight-normal">@localizer["text"]</h1>
+</div>
+
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+
+
+    <div>
+        <label asp-for="UserName" class="control-label text-white">@localizer["UserName"]</label><br />
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label asp-for="Email" class="control-label text-white">@localizer["Email"]</label><br />
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
     </div>
 
-        <form method="post" asp-controller="Account" asp-action="Register">
-            <div asp-validation-summary="ModelOnly"></div>
+
+    <div>
+        <label asp-for="Year" class="control-label text-white">  @localizer["Year"]</label><br />
+        <input asp-for="Year" />
+        <span asp-validation-for="Year"></span>
+    </div>
 
 
-            <div>
-                <label asp-for="UserName" class="control-label text-white"></label><br />
-                <input asp-for="UserName" />
-                <span asp-validation-for="UserName"></span>
-            </div>
-            <div>
-                <label asp-for="Email" class="control-label text-white"></label><br />
-                <input asp-for="Email" />
-                <span asp-validation-for="Email"></span>
-            </div>
+    <div>
+        <label asp-for="PhoneNumber" class="control-label text-white">  @localizer["PhoneNumber"]</label><br />
+        <input asp-for="PhoneNumber" />
+        <span asp-validation-for="PhoneNumber"></span>
+    </div>
 
+    <div>
+        <label asp-for="Password" class="control-label text-white">  @localizer["Password"]</label><br />
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
 
-            <div>
-                <label asp-for="Year" class="control-label text-white"></label><br />
-                <input asp-for="Year" />
-                <span asp-validation-for="Year"></span>
-            </div>
+    <div>
+        <label asp-for="PasswordConfirm" class="control-label text-white">@localizer["PasswordConfirm"]</label><br />
+        <input asp-for="PasswordConfirm" />
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
 
-
-            <div>
-                <label asp-for="PhoneNumber" class="control-label text-white"></label><br />
-                <input asp-for="PhoneNumber" />
-                <span asp-validation-for="PhoneNumber"></span>
-            </div>
-
-            <div>
-                <label asp-for="Password" class="control-label text-white"></label><br />
-                <input asp-for="Password" />
-                <span asp-validation-for="Password"></span>
-            </div>
-
-            <div>
-                <label asp-for="PasswordConfirm" class="control-label text-white"></label><br />
-                <input asp-for="PasswordConfirm" />
-                <span asp-validation-for="PasswordConfirm"></span>
-            </div>
-
-            <div>
-                <input type="submit" value="Регистрация" class="button-active" />
-            </div>
-        </form>
+    <div>
+        <input type="submit" value="@localizer["reg"]" class="button-active" />
+    </div>
+</form>
 

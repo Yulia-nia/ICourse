@@ -18,6 +18,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using System.Globalization;
+
 namespace ICourses
 {
     public class Startup
@@ -32,27 +39,25 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+                .AddViewLocalization();// добавляем локализацию представлений;
+
             services.AddControllersWithViews();
 
             // переписать на сервисы
             services.AddTransient<ISubject, SubjectRepository>();
             services.AddTransient<ISubjectService, SubjectService>();
-            
             services.AddTransient<ICourse, CourseRepository>();
             services.AddTransient<ICourseService, CourseService>();
-
             services.AddTransient<IModule, ModuleRepository>();
             services.AddTransient<IModuleService, ModuleService>();
-
             services.AddTransient<ITextMaterial, TextRepository>();
             services.AddTransient<ITextService, TextService>();
-
             services.AddTransient<IVideo, VideoRepository>();
             services.AddTransient<IVideoService, VideoService>();
-            
             services.AddTransient<ILike, LikeRepository>();
             //
-
             services.AddTransient<IComment, CommentRepository>();
             services.AddTransient<ICommentService, CommentService>();
 
@@ -66,6 +71,18 @@ namespace ICourses
 
             services.AddMvc();          
             services.AddSession();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var cultures = new List<CultureInfo> {
+                    new CultureInfo("en"),
+                    new CultureInfo("ru"),
+                    new CultureInfo("pl")
+                };
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en");
+                options.SupportedCultures = cultures;
+                options.SupportedUICultures = cultures;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +91,8 @@ namespace ICourses
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+               // app.UseDatabaseErrorPage();
             }
             else
             {
@@ -90,6 +109,10 @@ namespace ICourses
             //        context.HttpContext.Response.StatusCode);
             //});
 
+              app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+            //app.UseRequestLocalization();
+            
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

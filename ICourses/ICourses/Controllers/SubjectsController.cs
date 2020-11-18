@@ -54,6 +54,7 @@ namespace ICourses.Controllers
             if (ModelState.IsValid)
             { 
                 await _subjectService.AddSubject(subject);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
