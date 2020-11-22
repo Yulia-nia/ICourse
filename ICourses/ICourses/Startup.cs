@@ -17,13 +17,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
+using System.IO;
+using ICourses.Logger;
 
 namespace ICourses
 {
@@ -57,7 +59,7 @@ namespace ICourses
             services.AddTransient<IVideo, VideoRepository>();
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILike, LikeRepository>();
-            //
+            // Add like service
             services.AddTransient<IComment, CommentRepository>();
             services.AddTransient<ICommentService, CommentService>();
 
@@ -86,13 +88,12 @@ namespace ICourses
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-               // app.UseDatabaseErrorPage();
+                //app.UseExceptionHandler("/error-local-development");
             }
             else
             {
@@ -108,10 +109,15 @@ namespace ICourses
             //        "Status code page, status code: " +
             //        context.HttpContext.Response.StatusCode);
             //});
+            app.UseForwardedHeaders();
 
-              app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+            app.UseDeveloperExceptionPage();
+
+            //400-499
+            app.UseStatusCodePages();
+           
+            app.UseRequestLocalization(app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
             //app.UseRequestLocalization();
-            
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -121,11 +127,33 @@ namespace ICourses
             app.UseAuthentication();
             app.UseAuthorization();
 
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            //var logger = loggerFactory.CreateLogger("FileLogger");
+
+            //var loggerfactory = LoggerFactory.Create(builder => builder.ClearProviders());
+            //ILogger logger = loggerfactory.AddFileProvider("configs/Log.txt")
+            //                .CreateLogger<Startup>();
+            //logger.LogInformation("Error info");
+
+
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
+            app.Map("/error", ap => ap.Run(async context =>
+            {
+                await context.Response.WriteAsync($"Ops. Errooor!: {context.Request.Query["code"]}");
+            }));
+
+
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = "https";
+                return next();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapHub<ChatHub>("/Chat");
             });
         }
     }

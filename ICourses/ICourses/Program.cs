@@ -21,6 +21,7 @@ namespace ICourses
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Trace));
     }
 }
