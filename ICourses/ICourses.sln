@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses", "ICourses\ICourses.csproj", "{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses", "ICourses\ICourses.csproj", "{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Entities", "ICourses.Entities\ICourses.Entities.csproj", "{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Interfaces", "ICourses.Interfaces\ICourses.Interfaces.csproj", "{19413C37-8FD3-474B-B4E3-80B4E796E1C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Repositories", "ICourses.Repositories\ICourses.Repositories.csproj", "{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.ViewModels", "ICourses.ViewModels\ICourses.ViewModels.csproj", "{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Services", "ICourses.Services\ICourses.Services.csproj", "{989E87B0-3B1D-4158-87D1-DC90F407C298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19413C37-8FD3-474B-B4E3-80B4E796E1C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19413C37-8FD3-474B-B4E3-80B4E796E1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19413C37-8FD3-474B-B4E3-80B4E796E1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19413C37-8FD3-474B-B4E3-80B4E796E1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

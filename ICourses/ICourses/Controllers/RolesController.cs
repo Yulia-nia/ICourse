@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using ICourses.Data.Models;
-using ICourses.ViewModel;
+using ICourses.ViewModels;
+using ICourses.Entities;
 using Microsoft.AspNetCore.Authorization;
+using ICourses.Roles.ViewModels;
 
 namespace ICourses.Controllers
 {

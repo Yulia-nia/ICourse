@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ICourses.Data;
-using ICourses.Data.Models;
-using ICourses.ViewModel;
-using ICourses.Data.Interfaces;
+using ICourses.ViewModels;
+using ICourses.Interfaces;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using ICourses.Services.Interfaces;
+using ICourses.Entities;
 
 namespace ICourses.Controllers
 {
@@ -26,13 +25,49 @@ namespace ICourses.Controllers
         private readonly ICommentService _commentService;
 
         private readonly ICourseService _courseService;
-        private readonly ILike _like;
-        public CoursesController(ICourseService courseService, UserManager<User> userManager,ILike like, ICommentService commentService)
+        private readonly ILikeService _like;
+        public CoursesController(ICourseService courseService, UserManager<User> userManager, ILikeService like, ICommentService commentService)
         {
             _commentService = commentService;
             _like = like;
             _courseService = courseService;
             _userManager = userManager;     
+        }
+
+
+        public async Task<IActionResult> AddFavorite(Guid id)
+        {
+            var getCourse = await _courseService.GetCourse(id); //
+            var getUser = _userManager.GetUserId(User);         //
+
+            // добавляем в список юзера
+            if (getCourse != null)
+            {
+                var like = _like.AddLike(id, getUser);
+                if (like != null)
+                {
+                    return RedirectToAction("Details", "Courses", new { id = id });
+                }                
+            }
+            return RedirectToAction("Details", "Courses", new { id = id });
+        }
+
+        public async Task<IActionResult> GetFavorite()
+        {
+            //var getCourse = await _courseService.GetCourse(id); //
+            var getUser = _userManager.GetUserId(User);         //
+            var likes = await _like.GetAllLikes(getUser);
+            return View(likes);
+        }
+
+
+        [Authorize(Roles = "admin,teacher,moderator")]
+        public async Task<IActionResult> UserCourses()
+        {
+            //var getCourse = await _courseService.GetCourse(id); //
+            var getUser = _userManager.GetUserId(User);         //
+            var course = await _courseService.GetUserCourses(getUser);
+            return View(course);
         }
 
         public async Task<IActionResult> Details(Guid id)

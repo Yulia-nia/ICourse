@@ -13,12 +13,12 @@
             <blockquote>
 
 
-                
+
                 <small><cite title="Source Title">@Model.Email <i class="icon-map-marker"></i></cite></small>
             </blockquote>
             <table>
                 <tr>
-                  
+
 
                     <td>@Model.Year</td>
                 </tr>
@@ -36,6 +36,18 @@
                     </td>
                 </tr>
             </table>
+
+
+            <div>
+                <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Courses" asp-action="UserCourses" asp-route-id="@Model.Id">
+                    Просмотр ваших курсов
+                </a>
+            </div>
+        </div>
+        <div>
+            <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Courses" asp-action="GetFavorite" asp-route-id="@Model.Id">
+                Просмотр избранного
+            </a>
         </div>
     </div>
 </div>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ICourses.Entities\ICourses.Entities.csproj" />
+    <ProjectReference Include="..\ICourses.Interfaces\ICourses.Interfaces.csproj" />
+    <ProjectReference Include="..\ICourses.ViewModels\ICourses.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

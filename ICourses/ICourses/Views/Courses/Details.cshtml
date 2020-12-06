@@ -1,7 +1,6 @@
 ﻿@model ICourses.Data.Models.Course
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
-
 @{
     ViewData["Title"] = "Index";
 }
@@ -19,41 +18,20 @@
         <h6 class="text-muted m-1">@localizer["LangLable"]: @Model.Language</h6>
         <h6 class="text-muted m-1">@localizer["Author"]: @Model.AuthorId</h6>
         <p class="lead text-white m-1">@localizer["Description"]: @Model.Description</p>
-
-        @*<a label id="LIKEpost" asp-route-id="@Model.Id">LIKE</a>
-            <label id="likePost" asp-for="LikePost">@Model.LikePost</label>
-            <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-            <script type="text/javascript">
-
-                                     if (LIKEpost) {
-                                          $.ajax({
-                                               type = 'POST',
-                                               url: '@Url.Action("Like", "Publication")',
-                                               data: {
-                                                   id: @Model.Id
-                                               },
-                                               dataType: "text",
-                                               success: function (msg) {
-                                                    let likePost = getElementById('likePost');
-                                                    likePost++;
-                                                    location.reload(likePost);
-                                                    console.log(msg);
-                                               },
-                                               error: function (req, status, error) {
-                                                    console.log(msg);
-                                               }
-                                          });
-                                     }
-            </script>*@
-
         <hr />
         <a class="nav-link active text-success" href="#comments">
-            @localizer["AComm"] 
+            @localizer["AComm"]
         </a>
     </div>
 
     <div class="col-md-5">
         <img style='width:500px; height:500px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(@Model.Image))" />
+    </div>
+
+    <div>
+        <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Courses" asp-action="AddFavorite" asp-route-id="@Model.Id">
+            добавить в избранное
+        </a>
     </div>
 </div>
 
@@ -63,7 +41,7 @@
     {
         <p>
             <a class="button-active revealator-slideup revealator-delay3 nav" asp-controller="Modules" asp-action="Create" asp-route-id="@Model.Id">
-                @localizer["CreateModule"] 
+                @localizer["CreateModule"]
             </a>
         </p>
     }
@@ -101,5 +79,8 @@
     @localizer["AddComment"]
 </a>
 <partial name="_PartialComments.cshtml" />
+
+
+<script src="../../Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
 
 

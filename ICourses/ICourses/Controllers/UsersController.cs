@@ -1,7 +1,6 @@
-﻿using ICourses.Data;
-using ICourses.Data.Models;
-using ICourses.Data.Repositories;
-using ICourses.ViewModel;
+﻿using ICourses.Repositories;
+using ICourses.ViewModels;
+using ICourses.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ICourses.Users.ViewModels;
 
 namespace ICourses.Controllers
 {

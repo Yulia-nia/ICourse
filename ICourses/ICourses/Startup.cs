@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ICourses.Data;
-using ICourses.Data.Interfaces;
-using ICourses.Data.Models;
-using ICourses.Data.Repositories;
+using ICourses.Entities;
+using ICourses.Interfaces;
+using ICourses.Repositories;
 using ICourses.Services;
+using System.Collections.Generic;
 using ICourses.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,7 +55,7 @@ namespace ICourses
             services.AddTransient<IVideo, VideoRepository>();
             services.AddTransient<IVideoService, VideoService>();
             services.AddTransient<ILike, LikeRepository>();
-            // Add like service
+            services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<IComment, CommentRepository>();
             services.AddTransient<ICommentService, CommentService>();
 
@@ -67,7 +63,7 @@ namespace ICourses
             services.AddDbContext<CourseDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<ICourses.Entities.User, IdentityRole>()
                 .AddEntityFrameworkStores<CourseDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -90,6 +86,7 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -127,7 +124,7 @@ namespace ICourses
             app.UseAuthentication();
             app.UseAuthorization();
 
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            
             //var logger = loggerFactory.CreateLogger("FileLogger");
 
             //var loggerfactory = LoggerFactory.Create(builder => builder.ClearProviders());

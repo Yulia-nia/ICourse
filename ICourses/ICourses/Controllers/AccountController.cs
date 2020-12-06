@@ -1,8 +1,7 @@
 ﻿using ICourses.Services;
-using ICourses.Data;
-using ICourses.Data.Models;
+using ICourses.Entities;
 using ICourses.Models;
-using ICourses.ViewModel;
+using ICourses.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ICourses.Users.ViewModels;
 
 namespace ICourses.Controllers
 {
-
     public class AccountController : Controller
     {
 

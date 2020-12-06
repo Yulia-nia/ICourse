@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ICourses.Data;
-using ICourses.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using ICourses.Data.Interfaces;
+using ICourses.Interfaces;
 using System.IO;
-using ICourses.ViewModel;
+using ICourses.Entities;
+using ICourses.ViewModels;
 using ICourses.Services.Interfaces;
 
 namespace ICourses.Controllers
