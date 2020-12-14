@@ -19,7 +19,7 @@ namespace ICourses.Controllers
         //private readonly CourseDbContext _context;
         //private readonly IVideo _video;
         IVideoService _videService;
-       public VideosController(/*CourseDbContext context*/ IVideoService videoService)///, IVideo video)
+       public VideosController(/*CourseDbContext context*/ IVideoService videoService)
         {
             //_video = video;
             _videService = videoService;

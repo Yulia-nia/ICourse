@@ -24,9 +24,8 @@ namespace ICourses.Controllers
         UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         public IConfiguration _config;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config/*, IUser iUser*/)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config)
         {
-            //_user = iUser;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
@@ -116,14 +115,12 @@ namespace ICourses.Controllers
 
        
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
             return code == null ? View("Error") : View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -182,6 +179,7 @@ namespace ICourses.Controllers
             }
             return View(model);
         }
+
 
     }
 }

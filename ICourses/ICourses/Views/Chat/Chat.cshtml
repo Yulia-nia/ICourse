@@ -1,0 +1,50 @@
+﻿<section class="eight">
+    <div class="container">
+        <div class="contacts">
+            <div class="why-text text-white text-center">
+                <h3>Чат</h3>
+            </div>
+            <hr />
+            <form>
+                <div class="row">&nbsp;</div>
+
+                <div class="row text-center form-group">
+                    <div class="col">
+                        <div class="text-success">Input name</div>
+                        <div><input class="form-control" type="text" id="userInput" /></div>
+                    </div>
+                </div>
+
+                <div class="row text-center form-group">
+                    <div class="col">
+                        <div class="text-success">Message</div>
+                        <div><input class="form-control" type="text" id="messageInput" /></div>
+                    </div>
+                </div>
+
+                <div class="row">&nbsp;</div>
+
+                <div class="text-center form-group">
+                    <input class="btn btn-primary button submity" type="button" id="sendButton" value="Send Message" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+    <div class="row text-center">
+        <div class="col-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row text-center text-white">
+        <div class="col-lg-4">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>

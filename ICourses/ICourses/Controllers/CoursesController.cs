@@ -34,7 +34,6 @@ namespace ICourses.Controllers
             _userManager = userManager;     
         }
 
-
         public async Task<IActionResult> AddFavorite(Guid id)
         {
             var getCourse = await _courseService.GetCourse(id); //

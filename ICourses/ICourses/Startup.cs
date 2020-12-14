@@ -22,6 +22,7 @@ using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.IO;
 using ICourses.Logger;
+using ICourses.SignalR;
 
 namespace ICourses
 {
@@ -67,8 +68,16 @@ namespace ICourses
                 .AddEntityFrameworkStores<CourseDbContext>()
                 .AddDefaultTokenProviders();
 
+            //services.AddAuthentication()
+            //       .AddGoogle(options =>
+            //       {
+            //           options.ClientId = "454857910144-4f2e8u6ulf7reicpf3a47m4bo7117us4.apps.googleusercontent.com";
+            //           options.ClientSecret = "ilVna-yu_xSBxMAofOXRBRwC";
+            //       });
+
             services.AddMvc();          
             services.AddSession();
+            services.AddSignalR();
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var cultures = new List<CultureInfo> {
@@ -86,6 +95,7 @@ namespace ICourses
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+
             loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
             if (env.IsDevelopment())
             {
@@ -150,7 +160,8 @@ namespace ICourses
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapHub<ChatHub>("/Chat");
+                endpoints.MapHub<ChatHub>("/Chat");
+
             });
         }
     }

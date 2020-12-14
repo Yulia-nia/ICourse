@@ -5,15 +5,17 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses", "ICourses\ICourses.csproj", "{BC444F15-1B56-46C2-9AC5-EC1A51E78EE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Entities", "ICourses.Entities\ICourses.Entities.csproj", "{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses.Entities", "ICourses.Entities\ICourses.Entities.csproj", "{4AD2EF08-2FA0-49A4-BB74-1C6B0589CE4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Interfaces", "ICourses.Interfaces\ICourses.Interfaces.csproj", "{19413C37-8FD3-474B-B4E3-80B4E796E1C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses.Interfaces", "ICourses.Interfaces\ICourses.Interfaces.csproj", "{19413C37-8FD3-474B-B4E3-80B4E796E1C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Repositories", "ICourses.Repositories\ICourses.Repositories.csproj", "{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses.Repositories", "ICourses.Repositories\ICourses.Repositories.csproj", "{CA2DC724-9220-4EC8-B8DF-C0F3F767C092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.ViewModels", "ICourses.ViewModels\ICourses.ViewModels.csproj", "{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses.ViewModels", "ICourses.ViewModels\ICourses.ViewModels.csproj", "{F7AEEA70-1B89-4056-B4E9-4444C9BF6809}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Services", "ICourses.Services\ICourses.Services.csproj", "{989E87B0-3B1D-4158-87D1-DC90F407C298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICourses.Services", "ICourses.Services\ICourses.Services.csproj", "{989E87B0-3B1D-4158-87D1-DC90F407C298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICourses.Tests", "ICourses.Tests\ICourses.Tests.csproj", "{9C2D2A32-4F3C-4FE4-9A14-760C5DFB16CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{989E87B0-3B1D-4158-87D1-DC90F407C298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C2D2A32-4F3C-4FE4-9A14-760C5DFB16CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C2D2A32-4F3C-4FE4-9A14-760C5DFB16CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C2D2A32-4F3C-4FE4-9A14-760C5DFB16CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C2D2A32-4F3C-4FE4-9A14-760C5DFB16CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

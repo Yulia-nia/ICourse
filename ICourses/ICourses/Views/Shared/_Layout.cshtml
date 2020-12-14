@@ -41,6 +41,7 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+
                             @if (User.IsInRole("admin"))
                             {
                                 <li>
@@ -48,13 +49,16 @@
                                 </li>
                             }
                             <li>
+                                <a class="nav-link" asp-controller="Chat" asp-action="Chat">@localizer["Chat"]</a>
+                            </li>
+                            <li>
                                 <a class="nav-link" asp-controller="Account" asp-action="Profile">@localizer["Hello"] @User.Identity.Name</a>
                             </li>
                             <li>
                                 <form method="post" asp-controller="Account" asp-action="Logout">
                                     <button type="submit" class="btn btn-light center-block">
                                         <span class="glyphicon glyphicon-log-out"></span>
-                                         @localizer["Logout"]
+                                        @localizer["Logout"]
                                     </button>
                                 </form>
                             </li>
