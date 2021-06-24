@@ -11,7 +11,7 @@
             <div class="why-text text-white">
                 <h3>@localizer["h1text"]</h3>
             </div>
-            @await Component.InvokeAsync("StatusMessage", new { statusMessage = ViewData["StatusMessage"] })
+         
             <hr />
             <form asp-controller="Courses" asp-action="Create" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>

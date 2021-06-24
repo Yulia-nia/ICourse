@@ -9,6 +9,7 @@ namespace ICourses.Entities
         {
             //Database.Migrate();
             Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
       
         public DbSet<Subject> Subjects { get; set; }
